@@ -35,11 +35,6 @@ else ()
     set(LIBRARIES ${CMAKE_DL_LIBS})
 endif()
 
-set(EXAMPLE_SOURCES
-    include/FMI.h
-    include/FMI3.h
-)
-
 set (MODEL_NAMES Controller Plant Supervisor)
 
 foreach (MODEL_NAME ${MODEL_NAMES})
@@ -91,11 +86,10 @@ endforeach(MODEL_NAME)
 
 # synchronous_control_me
 add_executable (synchronous_control_me
-    ${EXAMPLE_SOURCES}
-    include/fmi3PlatformTypes.h
-    include/fmi3FunctionTypes.h
-    include/fmi3Functions.h
+    include/FMI.h
+    include/FMI3.h
     src/fmi3Functions.c
+    src/FMI3.c
     src/FMI.c
     src/synchronous_control_me.c
 )

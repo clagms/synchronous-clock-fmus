@@ -405,7 +405,7 @@ TERMINATE:
 
     fclose(outputFile);
 
-    puts("Done!");
+    printf("Done! \n");
 
     return status == FMIOK ? EXIT_SUCCESS : EXIT_FAILURE;
 }
