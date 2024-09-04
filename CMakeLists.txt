@@ -27,6 +27,19 @@ endif ()
 
 message("FMI_PLATFORM: " ${FMI_PLATFORM})
 
+if (MSVC)
+    set(LIBRARIES "")
+elseif(UNIX AND NOT APPLE)
+    set(LIBRARIES ${CMAKE_DL_LIBS} m)
+else ()
+    set(LIBRARIES ${CMAKE_DL_LIBS})
+endif()
+
+set(EXAMPLE_SOURCES
+    include/FMI.h
+    include/FMI3.h
+)
+
 set (MODEL_NAMES Controller Plant Supervisor)
 
 foreach (MODEL_NAME ${MODEL_NAMES})
@@ -75,3 +88,23 @@ add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
 )
 
 endforeach(MODEL_NAME)
+
+# synchronous_control_me
+add_executable (synchronous_control_me
+    ${EXAMPLE_SOURCES}
+    include/fmi3PlatformTypes.h
+    include/fmi3FunctionTypes.h
+    include/fmi3Functions.h
+    src/fmi3Functions.c
+    src/FMI.c
+    src/synchronous_control_me.c
+)
+add_dependencies(synchronous_control_me Controller Plant Supervisor)
+set_target_properties(synchronous_control_me PROPERTIES FOLDER src)
+target_include_directories(synchronous_control_me PRIVATE include Controller Plant Supervisor)
+target_link_libraries(synchronous_control_me ${LIBRARIES})
+set_target_properties(synchronous_control_me PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY         temp
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG   temp
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE temp
+)
