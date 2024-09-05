@@ -21,16 +21,16 @@ fmi3Status fmi3SetDebugLogging(fmi3Instance instance,
 }
 
 /* Creation and destruction of FMU instances and setting debug status */
-fmi3Instance fmi3InstantiateModelExchange(
-    fmi3String                 instanceName,
-    fmi3String                 instantiationToken,
-    fmi3String                 resourcePath,
-    fmi3Boolean                visible,
-    fmi3Boolean                loggingOn,
-    fmi3InstanceEnvironment    instanceEnvironment,
-    fmi3LogMessageCallback     logMessage) {
-    return (fmi3Instance)NULL;
-}
+//fmi3Instance fmi3InstantiateModelExchange(
+//    fmi3String                 instanceName,
+//    fmi3String                 instantiationToken,
+//    fmi3String                 resourcePath,
+//    fmi3Boolean                visible,
+//    fmi3Boolean                loggingOn,
+//    fmi3InstanceEnvironment    instanceEnvironment,
+//    fmi3LogMessageCallback     logMessage) {
+//    return (fmi3Instance)NULL;
+//}
 
 //fmi3Instance fmi3InstantiateCoSimulation(
 //    fmi3String                     instanceName,

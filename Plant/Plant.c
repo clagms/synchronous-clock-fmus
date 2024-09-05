@@ -23,6 +23,17 @@ static void setStartValues() {
     variables.u_r = 0;
 }
 
+fmi3Instance fmi3InstantiateModelExchange(
+    fmi3String                 instanceName,
+    fmi3String                 instantiationToken,
+    fmi3String                 resourcePath,
+    fmi3Boolean                visible,
+    fmi3Boolean                loggingOn,
+    fmi3InstanceEnvironment    instanceEnvironment,
+    fmi3LogMessageCallback     logMessage) {
+    return  (fmi3Instance)(0x1);
+}
+
 fmi3Instance fmi3InstantiateCoSimulation(
     fmi3String                     instanceName,
     fmi3String                     instantiationToken,

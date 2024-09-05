@@ -18,6 +18,17 @@ fmi3Instance fmi3InstantiateCoSimulation(
     return (fmi3Instance)(0x1);
 }
 
+fmi3Instance fmi3InstantiateModelExchange(
+    fmi3String                 instanceName,
+    fmi3String                 instantiationToken,
+    fmi3String                 resourcePath,
+    fmi3Boolean                visible,
+    fmi3Boolean                loggingOn,
+    fmi3InstanceEnvironment    instanceEnvironment,
+    fmi3LogMessageCallback     logMessage) {
+    return (fmi3Instance)(0x1);
+}
+
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
     fmi3Boolean toleranceDefined,
     fmi3Float64 tolerance,

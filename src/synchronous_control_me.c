@@ -211,18 +211,18 @@ int main(int argc, char *argv[])
     }
 
     // Instantiate
-    FMIInstance* controller = FMICreateInstance("controller", "Controller" BINARY_DIR "Controller" BINARY_EXT, logMessage, NULL);
-    FMIInstance* plant      = FMICreateInstance("plant",      "Plant"      BINARY_DIR "Plant"      BINARY_EXT, logMessage, NULL);
-    FMIInstance* supervisor = FMICreateInstance("supervisor", "Supervisor" BINARY_DIR "Supervisor" BINARY_EXT, logMessage, NULL);
+    FMIInstance* controller = FMICreateInstance("controller", "Controller" BINARY_DIR "Controller" BINARY_EXT, logMessage, logMessage);
+    FMIInstance* plant = FMICreateInstance("plant", "Plant"      BINARY_DIR "Plant"      BINARY_EXT, logMessage, logMessage);
+    FMIInstance* supervisor = FMICreateInstance("supervisor", "Supervisor" BINARY_DIR "Supervisor" BINARY_EXT, logMessage, logMessage);
 
     if (!controller || !plant || !supervisor) {
         puts("Failed to load shared libraries.");
         return FMIError;
     }
 
-    CALL(FMI3InstantiateModelExchange(controller, "{e1f14bf0-302d-4ef9-b11c-e01c7ed456cb}", NULL, fmi3False, fmi3False));
-    CALL(FMI3InstantiateModelExchange(plant,      "{6e81b08d-97be-4de1-957f-8358a4e83184}", NULL, fmi3False, fmi3False));
-    CALL(FMI3InstantiateModelExchange(supervisor, "{64202d14-799a-4379-9fb3-79354aec17b2}", NULL, fmi3False, fmi3False));
+    CALL(FMI3InstantiateModelExchange(controller, "{e1f14bf0-302d-4ef9-b11c-e01c7ed456cb}", NULL, fmi3False, fmi3True));
+    CALL(FMI3InstantiateModelExchange(plant,      "{6e81b08d-97be-4de1-957f-8358a4e83184}", NULL, fmi3False, fmi3True));
+    CALL(FMI3InstantiateModelExchange(supervisor, "{64202d14-799a-4379-9fb3-79354aec17b2}", NULL, fmi3False, fmi3True));
 
     // Initialize
     CALL(FMI3EnterInitializationMode(controller, fmi3False, 0.0, tStart, fmi3True, tEnd));
