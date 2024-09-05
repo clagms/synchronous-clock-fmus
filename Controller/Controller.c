@@ -1,22 +1,39 @@
 #include "fmi3Functions.h"
 
+#define MAX_MSG_SIZE 100
 
-fmi3Instance fmi3InstantiateCoSimulation(
-    fmi3String                     instanceName,
-    fmi3String                     instantiationToken,
-    fmi3String                     resourcePath,
-    fmi3Boolean                    visible,
-    fmi3Boolean                    loggingOn,
-    fmi3Boolean                    eventModeUsed,
-    fmi3Boolean                    earlyReturnAllowed,
-    const fmi3ValueReference       requiredIntermediateVariables[],
-    size_t                         nRequiredIntermediateVariables,
-    fmi3InstanceEnvironment        instanceEnvironment,
-    fmi3LogMessageCallback         logMessage,
-    fmi3IntermediateUpdateCallback intermediateUpdate) {
+typedef enum {
+    vr_r = 1,   // Clock
+    vr_xr,      // Sample
+    vr_ur,      // Discrete state/output
+    vr_pre_ur,  // Previous ur
+    vr_as,      // Local var
+    vr_s        // Clock from supervisor
+} ValueReference;
 
-    return (fmi3Instance)(0x1);
-}
+typedef struct {
+    bool r;         // Clock
+    double xr;      // Sample
+    double ur;      // Discrete state/output
+    double pre_ur;  // Previous ur
+    double as;      // Local var
+    bool s;         // Clock from supervisor
+} ControllerData;
+
+typedef struct {
+
+    const char* instanceName;
+
+    fmi3Boolean loggingOn;
+
+    // callback functions
+    fmi3LogMessageCallback logMessage;
+    
+    void* componentEnvironment;
+
+    ControllerData data;
+
+} ControllerInstance;
 
 fmi3Instance fmi3InstantiateModelExchange(
     fmi3String                 instanceName,
@@ -26,7 +43,24 @@ fmi3Instance fmi3InstantiateModelExchange(
     fmi3Boolean                loggingOn,
     fmi3InstanceEnvironment    instanceEnvironment,
     fmi3LogMessageCallback     logMessage) {
-    return (fmi3Instance)(0x1);
+
+    ControllerInstance* instance = (ControllerInstance*)calloc(1, sizeof(ControllerInstance));
+
+    if (!instance) return NULL;
+
+    instance->instanceName = instanceName;
+    instance->loggingOn = loggingOn;
+    instance->logMessage = logMessage;
+    instance->componentEnvironment = instanceEnvironment;
+
+    instance->data.r = false;       // Clock
+    instance->data.xr = 0.0;                    // Sample
+    instance->data.ur = 0.0;                    // Discrete state/output
+    instance->data.pre_ur = 0.0;                // Previous ur
+    instance->data.as = 1.0;                    // In var from Supervisor
+    instance->data.s = false;       // Clock from Supervisor
+
+    return (fmi3Instance)instance;
 }
 
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
@@ -36,7 +70,7 @@ fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
     fmi3Boolean stopTimeDefined,
     fmi3Float64 stopTime) {
 
-    // TODO: implement
+    
     return fmi3OK;
 }
 
@@ -57,9 +91,56 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
     size_t nValueReferences,
     fmi3Float64 values[],
     size_t nValues) {
+        
+    char msg_buff[MAX_MSG_SIZE];
+    
+    ControllerInstance* comp = (ControllerInstance*)instance;
 
-    // TODO: implement
-    return fmi3OK;
+    fmi3Status status = fmi3OK;
+
+    if (nValueReferences == 0) return (fmi3Status)status;
+
+    size_t i;
+
+    for (i = 0; i < nValueReferences; i++) {
+        fmi3Status s;
+        ValueReference vr = valueReferences[i];
+        switch (vr) {
+            case vr_xr:
+                values[i] = comp->data.xr;
+                s = fmi3OK;
+                break;
+            case vr_ur:
+                if (comp->data.r == true) {
+                    values[i] = comp->data.ur + comp->data.as;
+                }
+                else {
+                    values[i] = comp->data.ur;
+                }
+                s = fmi3OK;
+                break;
+            case vr_pre_ur:
+                values[i] = comp->data.pre_ur;
+                s = fmi3OK;
+                break;
+            case vr_as:
+                values[i] = comp->data.as;
+                s = fmi3OK;
+                break;
+            default:
+                snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected value reference: %d.", vr);
+                comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+                s = fmi3Error;
+        }
+        status = max(status, s);
+        if (status > fmi3Warning) return status;
+    }
+    if (i != nValues) {
+        snprintf(msg_buff, MAX_MSG_SIZE, "Expected nValues = %zu but was %zu.", i, nValues);
+        comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+        return fmi3Error;
+    }
+    return (fmi3Status)status;
 }
 
 fmi3Status fmi3GetClock(fmi3Instance instance,

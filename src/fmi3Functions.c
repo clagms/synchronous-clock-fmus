@@ -32,21 +32,21 @@ fmi3Status fmi3SetDebugLogging(fmi3Instance instance,
 //    return (fmi3Instance)NULL;
 //}
 
-//fmi3Instance fmi3InstantiateCoSimulation(
-//    fmi3String                     instanceName,
-//    fmi3String                     instantiationToken,
-//    fmi3String                     resourcePath,
-//    fmi3Boolean                    visible,
-//    fmi3Boolean                    loggingOn,
-//    fmi3Boolean                    eventModeUsed,
-//    fmi3Boolean                    earlyReturnAllowed,
-//    const fmi3ValueReference       requiredIntermediateVariables[],
-//    size_t                         nRequiredIntermediateVariables,
-//    fmi3InstanceEnvironment        instanceEnvironment,
-//    fmi3LogMessageCallback         logMessage,
-//    fmi3IntermediateUpdateCallback intermediateUpdate) {
-//    return NULL;
-//}
+fmi3Instance fmi3InstantiateCoSimulation(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourcePath,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    eventModeUsed,
+    fmi3Boolean                    earlyReturnAllowed,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3LogMessageCallback         logMessage,
+    fmi3IntermediateUpdateCallback intermediateUpdate) {
+    return (fmi3Instance)NULL;
+}
 
 fmi3Instance fmi3InstantiateScheduledExecution(
     fmi3String                     instanceName,
