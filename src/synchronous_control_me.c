@@ -91,6 +91,40 @@ static void logMessage(FMIInstance* instance, FMIStatus status, const char* cate
 }
 
 
+static void logFunction(FMIInstance* instance, FMIStatus status, const char* msg_format, ...) {
+
+    va_list args;
+    va_start(args, msg_format);
+
+    switch (status) {
+    case FMIOK:
+        printf("[OK] ");
+        break;
+    case FMIWarning:
+        printf("[Warning] ");
+        break;
+    case FMIDiscard:
+        printf("[Discard] ");
+        break;
+    case FMIError:
+        printf("[Error] ");
+        break;
+    case FMIFatal:
+        printf("[Fatal] ");
+        break;
+    case FMIPending:
+        printf("[Pending] ");
+        break;
+    }
+
+    vprintf(msg_format, args);
+
+    printf("\n");
+
+    va_end(args);
+}
+
+
 //**************** Output aux functions ******************//
 
 #define OUTPUT_FILE_HEADER "time,x,r,x_r,u_r,a_s\n"
@@ -211,9 +245,9 @@ int main(int argc, char *argv[])
     }
 
     // Instantiate
-    FMIInstance* controller = FMICreateInstance("controller", "Controller" BINARY_DIR "Controller" BINARY_EXT, logMessage, logMessage);
-    FMIInstance* plant = FMICreateInstance("plant", "Plant"      BINARY_DIR "Plant"      BINARY_EXT, logMessage, logMessage);
-    FMIInstance* supervisor = FMICreateInstance("supervisor", "Supervisor" BINARY_DIR "Supervisor" BINARY_EXT, logMessage, logMessage);
+    FMIInstance* controller = FMICreateInstance("controller", "Controller" BINARY_DIR "Controller" BINARY_EXT, logMessage, logFunction);
+    FMIInstance* plant = FMICreateInstance("plant", "Plant"      BINARY_DIR "Plant"      BINARY_EXT, logMessage, logFunction);
+    FMIInstance* supervisor = FMICreateInstance("supervisor", "Supervisor" BINARY_DIR "Supervisor" BINARY_EXT, logMessage, logFunction);
 
     if (!controller || !plant || !supervisor) {
         puts("Failed to load shared libraries.");
