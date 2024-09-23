@@ -154,6 +154,10 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
+	return fmi3OK;
+}
+
 fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) {
 	PlantInstance* comp = (PlantInstance*)instance;
 	comp->data.time = time;

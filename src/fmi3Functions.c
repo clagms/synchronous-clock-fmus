@@ -76,7 +76,7 @@ void fmi3FreeInstance(fmi3Instance instance) { /* not implemented */ }
 
 //fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
-fmi3Status fmi3EnterEventMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
+// fmi3Status fmi3EnterEventMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
 //fmi3Status fmi3Terminate(fmi3Instance instance) { NOT_IMPLEMENTED; }
 

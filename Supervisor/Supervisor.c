@@ -135,6 +135,11 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+	comp->state = EventMode;
+	return fmi3OK;
+}
 
 fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
     size_t* nContinuousStates) {

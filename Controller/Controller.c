@@ -11,6 +11,12 @@ typedef enum {
 	vr_s        // Clock from supervisor
 } ValueReference;
 
+typedef enum {
+	Instantiated = 1,
+	EventMode,
+	ContinuousTimeMode
+} ModelState;
+
 typedef struct {
 	bool r;         // Clock
 	double xr;      // Sample
@@ -32,6 +38,8 @@ typedef struct {
 	void* componentEnvironment;
 
 	ControllerData data;
+
+	ModelState state;
 
 } ControllerInstance;
 
@@ -59,6 +67,8 @@ fmi3Instance fmi3InstantiateModelExchange(
 	instance->data.pre_ur = 0.0;                // Previous ur
 	instance->data.as = 1.0;                    // In var from Supervisor
 	instance->data.s = false;       // Clock from Supervisor
+	
+	instance->state = Instantiated;
 
 	return (fmi3Instance)instance;
 }
@@ -92,11 +102,12 @@ fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
 }
 
 fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
-
 	return fmi3OK;
 }
 
 fmi3Status fmi3EnterContinuousTimeMode(fmi3Instance instance) {
+	ControllerInstance* comp = (ControllerInstance*)instance;
+	comp->state = ContinuousTimeMode;
 	return fmi3OK;
 }
 
@@ -196,6 +207,11 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
+	ControllerInstance* comp = (ControllerInstance*)instance;
+	comp->state = EventMode;
+	return fmi3OK;
+}
 
 fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) {
 	ControllerInstance* comp = (ControllerInstance*)instance;
