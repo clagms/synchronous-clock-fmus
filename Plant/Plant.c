@@ -149,6 +149,8 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 		status = fmi3Error;
 	}
 
+	comp->data.der_x = - comp->data.x + comp->data.u;
+
 	derivatives[0] = comp->data.der_x;
 
 	return status;
@@ -156,6 +158,20 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 
 fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
 	return fmi3OK;
+}
+
+
+fmi3Status fmi3UpdateDiscreteStates(fmi3Instance instance,
+    fmi3Boolean* discreteStatesNeedUpdate,
+    fmi3Boolean* terminateSimulation,
+    fmi3Boolean* nominalsOfContinuousStatesChanged,
+    fmi3Boolean* valuesOfContinuousStatesChanged,
+    fmi3Boolean* nextEventTimeDefined,
+    fmi3Float64* nextEventTime) {
+    
+	fmi3Status status = fmi3OK;
+
+	return status;
 }
 
 fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) {
@@ -281,7 +297,7 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 		if (status > fmi3Warning) return status;
 	}
 
-	return fmi3OK;
+	return status;
 }
 
 fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
@@ -309,8 +325,6 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
 	const fmi3ValueReference valueReferences[],
 	size_t nValueReferences,
 	const fmi3Clock values[]) {
-
-	// TODO: implement
 	return fmi3OK;
 }
 

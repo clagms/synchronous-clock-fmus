@@ -20,7 +20,6 @@ typedef struct {
 	double x;  // Sample
 	double as; // Output and ClockedState that is fed to the Controller
 	double as_previous; // Previous value for as
-	bool clock_s_ticking; // Keeps track of whether clock s is ticking during event mode.
 	double z; // Event indicator
 	double pz; // Previous Event Indicator
 } SupervisorData;
@@ -68,7 +67,6 @@ fmi3Instance fmi3InstantiateModelExchange(
 	instance->data.x = 0.0;         // Sample
 	instance->data.as = 1.0;        // Discrete state/output
 	instance->data.as_previous = 1.0;
-	instance->data.clock_s_ticking = false; // State Event
 	instance->data.z = 0.0;
 	instance->data.pz = 0.0;
 	// The following is suggested by Masoud.
@@ -103,11 +101,6 @@ fmi3Status fmi3Terminate(fmi3Instance instance) {
 	return fmi3OK;
 }
 
-fmi3Status calculateValues(SupervisorInstance *comp) {
-    comp->data.z = 2.0 - comp->data.x;
-    return fmi3OK;
-}
-
 fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
     size_t* nEventIndicators) {
 	*nEventIndicators = 1;
@@ -124,7 +117,7 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 
 	if (nEventIndicators == 0) return status;
 
-	calculateValues(comp);
+	comp->data.z = 2.0 - comp->data.x;
 
 	size_t i;
 	for (i = 0; i < nEventIndicators; i++) {
@@ -138,7 +131,44 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
 	comp->state = EventMode;
+
+	if (comp->data.pz * comp->data.z < 0.0) {
+		// Clock s is ticking
+		comp->data.s = true;
+	}
+
 	return fmi3OK;
+}
+
+
+fmi3Status fmi3UpdateDiscreteStates(fmi3Instance instance,
+    fmi3Boolean* discreteStatesNeedUpdate,
+    fmi3Boolean* terminateSimulation,
+    fmi3Boolean* nominalsOfContinuousStatesChanged,
+    fmi3Boolean* valuesOfContinuousStatesChanged,
+    fmi3Boolean* nextEventTimeDefined,
+    fmi3Float64* nextEventTime) {
+    
+	char msg_buff[MAX_MSG_SIZE];
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (comp->data.s == true) {
+		comp->data.as_previous = comp->data.as;
+		comp->data.as = comp->data.as_previous * -1.0;
+		comp->data.s = false;
+	}
+	
+	*discreteStatesNeedUpdate = fmi3False;
+	*terminateSimulation = fmi3False;
+	*nominalsOfContinuousStatesChanged = fmi3False;
+	*valuesOfContinuousStatesChanged = fmi3False;
+	*nextEventTimeDefined = fmi3False;
+	*nextEventTime = 0.0;
+
+	return status;
 }
 
 fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
@@ -235,7 +265,7 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
 		case vr_as:
-			if (comp->state == EventMode && comp->data.clock_s_ticking) {
+			if (comp->state == EventMode && comp->data.s) {
 				// We need this here because when clock s is ticking, we need to output the next state already
 				//   (because the clocked partition depends on that value),
 				//   without executing the state transition.
@@ -371,8 +401,7 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
 	const fmi3ValueReference valueReferences[],
 	size_t nValueReferences,
 	const fmi3Clock values[]) {
-
-	// TODO: implement
+	
 	return fmi3OK;
 }
 

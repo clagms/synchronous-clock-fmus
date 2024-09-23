@@ -239,6 +239,31 @@ fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3UpdateDiscreteStates(fmi3Instance instance,
+    fmi3Boolean* discreteStatesNeedUpdate,
+    fmi3Boolean* terminateSimulation,
+    fmi3Boolean* nominalsOfContinuousStatesChanged,
+    fmi3Boolean* valuesOfContinuousStatesChanged,
+    fmi3Boolean* nextEventTimeDefined,
+    fmi3Float64* nextEventTime) {
+    
+	char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (comp->data.r == true) {
+		comp->data.pre_ur = comp->data.ur;
+    	comp->data.r = false;
+	}
+	if (comp->data.s == true) {
+		comp->data.ur = comp->data.ur + comp->data.as;
+		comp->data.as = false;
+	}
+
+	return status;
+}
 
 fmi3Status fmi3GetFloat64(fmi3Instance instance,
 	const fmi3ValueReference valueReferences[],
@@ -355,8 +380,40 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
 	size_t nValueReferences,
 	const fmi3Clock values[]) {
 
-	// TODO: implement
-	return fmi3OK;
+	char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nValueReferences == 0) return status;
+
+	fmi3Status s;
+
+	size_t i;
+
+	for (i = 0; i < nValueReferences; i++) {
+		fmi3Status s;
+		ValueReference vr = valueReferences[i];
+		switch (vr) {
+		case vr_r:
+			comp->data.r = values[i];
+			s = fmi3OK;
+			break;
+		case vr_s:
+			comp->data.s = values[i];
+			s = fmi3OK;
+			break;
+		default:
+			snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected value reference: %d.", vr);
+			comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+			s = fmi3Error;
+		}
+		status = max(status, s);
+		if (status > fmi3Warning) return status;
+	}
+
+	return status;
 }
 
 fmi3Status fmi3DoStep(fmi3Instance instance,
