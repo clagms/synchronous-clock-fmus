@@ -40,6 +40,8 @@ typedef struct {
 
 	ModelState state;
 
+	fmi3Boolean isDirtyValues;
+
 } SupervisorInstance;
 
 fmi3Instance fmi3InstantiateModelExchange(
@@ -72,6 +74,8 @@ fmi3Instance fmi3InstantiateModelExchange(
 	// The following is suggested by Masoud.
 	instance->data.pz = 2.0 - instance->data.x;
 
+	instance->isDirtyValues = fmi3False;
+
 	return (fmi3Instance)instance;
 }
 
@@ -81,14 +85,11 @@ fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 	fmi3Float64 startTime,
 	fmi3Boolean stopTimeDefined,
 	fmi3Float64 stopTime) {
-
-
 	return fmi3OK;
 }
 
 fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
 
-	// TODO: implement
 	return fmi3OK;
 }
 
@@ -96,6 +97,24 @@ fmi3Status fmi3Terminate(fmi3Instance instance) {
 
 	// TODO: implement
 	return fmi3OK;
+}
+
+fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    fmi3Float64 intervals[],
+    fmi3IntervalQualifier qualifiers[]) {
+
+	char msg_buff[MAX_MSG_SIZE];
+
+	fmi3Status status = fmi3Error;
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	snprintf(msg_buff, MAX_MSG_SIZE, "Function not relevant for this fmu.");
+	comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+
+	return (fmi3Status)status;
 }
 
 fmi3Status fmi3GetFloat64(fmi3Instance instance,
@@ -160,7 +179,37 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
 	size_t nValueReferences,
 	fmi3Clock values[]) {
 
-	// TODO: implement
+
+	char msg_buff[MAX_MSG_SIZE];
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nValueReferences == 0) return (fmi3Status)status;
+
+	fmi3Status s;
+
+	size_t i;
+
+	for (i = 0; i < nValueReferences; i++) {
+		fmi3Status s;
+		ValueReference vr = valueReferences[i];
+		switch (vr) {
+		case vr_x:
+			comp->data.x = values[i];
+			comp->isDirtyValues = true;
+			s = fmi3OK;
+			break;
+		default:
+			snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected value reference: %d.", vr);
+			comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+			s = fmi3Error;
+		}
+		status = max(status, s);
+		if (status > fmi3Warning) return status;
+	}
+
 	return fmi3OK;
 }
 
@@ -170,8 +219,38 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 	const fmi3Float64 values[],
 	size_t nValues) {
 
-	// TODO: implement
-	return fmi3OK;
+	char msg_buff[MAX_MSG_SIZE];
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nValueReferences == 0) return (fmi3Status)status;
+
+	size_t i;
+
+	for (i = 0; i < nValueReferences; i++) {
+		fmi3Status s;
+		ValueReference vr = valueReferences[i];
+		switch (vr) {
+		case vr_x:
+			comp->data.x = values[i];
+			s = fmi3OK;
+			break;
+		default:
+			snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected value reference: %d.", vr);
+			comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+			s = fmi3Error;
+		}
+		status = max(status, s);
+		if (status > fmi3Warning) return status;
+	}
+	if (i != nValues) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Expected nValues = %zu but was %zu.", i, nValues);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		return fmi3Error;
+	}
+	return (fmi3Status)status;
 }
 
 fmi3Status fmi3SetClock(fmi3Instance instance,
