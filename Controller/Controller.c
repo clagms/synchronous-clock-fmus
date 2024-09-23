@@ -253,13 +253,13 @@ fmi3Status fmi3UpdateDiscreteStates(fmi3Instance instance,
 
 	fmi3Status status = fmi3OK;
 
+	if (comp->data.s == true) {
+		comp->data.s = false;
+	}
 	if (comp->data.r == true) {
 		comp->data.pre_ur = comp->data.ur;
-    	comp->data.r = false;
-	}
-	if (comp->data.s == true) {
 		comp->data.ur = comp->data.ur + comp->data.as;
-		comp->data.as = false;
+    	comp->data.r = false;
 	}
 
 	return status;
@@ -327,8 +327,7 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
 	size_t nValueReferences,
 	fmi3Clock values[]) {
 
-	// TODO: implement
-	return fmi3OK;
+	return fmi3Error;
 }
 
 fmi3Status fmi3SetFloat64(fmi3Instance instance,

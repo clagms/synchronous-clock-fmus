@@ -38,9 +38,6 @@ typedef struct {
 	SupervisorData data;
 
 	ModelState state;
-
-	fmi3Boolean isDirtyValues;
-
 } SupervisorInstance;
 
 fmi3Instance fmi3InstantiateModelExchange(
@@ -71,8 +68,6 @@ fmi3Instance fmi3InstantiateModelExchange(
 	instance->data.pz = 0.0;
 	// The following is suggested by Masoud.
 	instance->data.pz = 2.0 - instance->data.x;
-
-	instance->isDirtyValues = fmi3False;
 
 	return (fmi3Instance)instance;
 }
@@ -117,6 +112,7 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 
 	if (nEventIndicators == 0) return status;
 
+	comp->data.pz = comp->data.z;
 	comp->data.z = 2.0 - comp->data.x;
 
 	size_t i;
@@ -269,15 +265,18 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 				// We need this here because when clock s is ticking, we need to output the next state already
 				//   (because the clocked partition depends on that value),
 				//   without executing the state transition.
-				// Therefore we compute the next state "comp->data.as_previous * -1.0" and output it.
+				// Therefore we compute the next state "comp->data.as * -1.0" and output it.
 				// The actual execution of the state transition happens in the eventUpdate function below.
 				// See definition of clocked partition in 2.2.8.3. Model Partitions and Clocked Variables.
-				values[i] = comp->data.as_previous * -1.0;
+				values[i] = comp->data.as * -1.0;
+				s = fmi3OK;
 			}
 			else {
+				snprintf(msg_buff, MAX_MSG_SIZE, "Value of clock s being observed outside of event mode.");
+				comp->logMessage(comp->componentEnvironment, status, "Warning", msg_buff);
+				s = fmi3Warning;
 				values[i] = comp->data.as_previous;
 			}
-			s = fmi3OK;
 			break;
 		case vr_x:
 			values[i] = comp->data.x;
@@ -304,7 +303,6 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
 	size_t nValueReferences,
 	fmi3Clock values[]) {
 
-
 	char msg_buff[MAX_MSG_SIZE];
 
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
@@ -313,17 +311,13 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
 
 	if (nValueReferences == 0) return status;
 
-	fmi3Status s;
-
 	size_t i;
-
 	for (i = 0; i < nValueReferences; i++) {
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_x:
-			comp->data.x = values[i];
-			comp->isDirtyValues = true;
+		case vr_s:
+			values[i] = comp->data.s;
 			s = fmi3OK;
 			break;
 		default:
@@ -335,7 +329,7 @@ fmi3Status fmi3GetClock(fmi3Instance instance,
 		if (status > fmi3Warning) return status;
 	}
 
-	return fmi3OK;
+	return status;
 }
 
 fmi3Status fmi3SetFloat64(fmi3Instance instance,
@@ -413,7 +407,5 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 	fmi3Boolean* terminateSimulation,
 	fmi3Boolean* earlyReturn,
 	fmi3Float64* lastSuccessfulTime) {
-
-	// TODO: implement
 	return fmi3OK;
 }
