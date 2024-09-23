@@ -98,6 +98,12 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
+    size_t* nEventIndicators) {
+	*nEventIndicators = 0;
+    return fmi3OK;
+}
+
 fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
     fmi3Float64 eventIndicators[],
     size_t nEventIndicators) {
@@ -115,6 +121,64 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
+
+	return status;
+}
+
+fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
+    size_t* nContinuousStates) {
+    *nContinuousStates = 1;
+    return fmi3OK;
+}
+
+fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
+    fmi3Float64 derivatives[],
+    size_t nContinuousStates) {
+
+    char msg_buff[MAX_MSG_SIZE];
+
+	PlantInstance* comp = (PlantInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nContinuousStates == 0) return status;
+
+	if (nContinuousStates != 1) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+
+	derivatives[0] = comp->data.der_x;
+
+	return status;
+}
+
+fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) {
+	PlantInstance* comp = (PlantInstance*)instance;
+	comp->data.time = time;
+	return fmi3OK;
+}
+
+fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
+    const fmi3Float64 continuousStates[],
+    size_t nContinuousStates) {
+	
+    char msg_buff[MAX_MSG_SIZE];
+
+	PlantInstance* comp = (PlantInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nContinuousStates == 0) return status;
+
+	if (nContinuousStates != 1) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+
+	comp->data.x = continuousStates[0];
 
 	return status;
 }
@@ -214,6 +278,27 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 	}
 
 	return fmi3OK;
+}
+
+fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
+    fmi3Float64 continuousStates[],
+    size_t nContinuousStates) {
+	
+	char msg_buff[MAX_MSG_SIZE];
+
+	PlantInstance* comp = (PlantInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nContinuousStates == 0) return status;
+
+	if (nContinuousStates != 1) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+
+	continuousStates[0] = comp->data.x;
 }
 
 fmi3Status fmi3SetClock(fmi3Instance instance,

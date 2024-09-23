@@ -72,6 +72,25 @@ fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 	return fmi3OK;
 }
 
+fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
+    fmi3Float64 continuousStates[],
+    size_t nContinuousStates) {
+	
+	char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nContinuousStates == 0) return status;
+
+	if (nContinuousStates != 0) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+}
+
 fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
 
 	return fmi3OK;
@@ -85,6 +104,12 @@ fmi3Status fmi3Terminate(fmi3Instance instance) {
 
 	// TODO: implement
 	return fmi3OK;
+}
+
+fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
+    size_t* nEventIndicators) {
+	*nEventIndicators = 0;
+    return fmi3OK;
 }
 
 fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
@@ -105,6 +130,34 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 		status = fmi3Error;
 	}
 
+	return status;
+}
+
+
+fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
+    size_t* nContinuousStates) {
+    *nContinuousStates = 0;
+    return fmi3OK;
+}
+
+fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
+    fmi3Float64 derivatives[],
+    size_t nContinuousStates) {
+
+    char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nContinuousStates == 0) return status;
+
+	if (nContinuousStates != 0) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+	
 	return status;
 }
 
@@ -142,6 +195,34 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 	}
 	return status;
 }
+
+
+fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) {
+	ControllerInstance* comp = (ControllerInstance*)instance;
+	return fmi3OK;
+}
+
+fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
+    const fmi3Float64 continuousStates[],
+    size_t nContinuousStates) {
+	
+    char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nContinuousStates == 0) return status;
+
+	if (nContinuousStates != 0) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+
+	return status;
+}
+
 
 fmi3Status fmi3GetFloat64(fmi3Instance instance,
 	const fmi3ValueReference valueReferences[],

@@ -1000,7 +1000,7 @@ FMIStatus FMI3GetContinuousStateDerivatives(FMIInstance *instance,
     if (instance->logFunctionCall) {
         FMIValuesToString(instance, nContinuousStates, NULL, derivatives, FMIFloat64Type);
         instance->logFunctionCall(instance, status,
-            "fmi3GetDerivatives(derivatives=%s, nContinuousStates=%zu)",
+            "fmi3GetContinuousStateDerivatives(derivatives=%s, nContinuousStates=%zu)",
             instance->buf2, nContinuousStates);
     }
 

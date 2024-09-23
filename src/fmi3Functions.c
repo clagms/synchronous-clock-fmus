@@ -471,21 +471,21 @@ fmi3Status fmi3CompletedIntegratorStep(fmi3Instance instance,
 
 /* Providing independent variables and re-initialization of caching */
 
-fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) { NOT_IMPLEMENTED; }
+// fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) { NOT_IMPLEMENTED; }
 
-fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
-    const fmi3Float64 continuousStates[],
-    size_t nContinuousStates) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
+//     const fmi3Float64 continuousStates[],
+//     size_t nContinuousStates) {
+//     NOT_IMPLEMENTED;
+// }
 
 /* Evaluation of the model equations */
 
-fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
-    fmi3Float64 derivatives[],
-    size_t nContinuousStates) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
+//     fmi3Float64 derivatives[],
+//     size_t nContinuousStates) {
+//     NOT_IMPLEMENTED;
+// }
 
 // fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 //     fmi3Float64 eventIndicators[],
@@ -493,11 +493,11 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 //     NOT_IMPLEMENTED;
 // }
 
-fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
-    fmi3Float64 continuousStates[],
-    size_t nContinuousStates) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
+//     fmi3Float64 continuousStates[],
+//     size_t nContinuousStates) {
+//     NOT_IMPLEMENTED;
+// }
 
 fmi3Status fmi3GetNominalsOfContinuousStates(fmi3Instance instance,
     fmi3Float64 nominals[],
@@ -505,15 +505,10 @@ fmi3Status fmi3GetNominalsOfContinuousStates(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
-    size_t* nEventIndicators) {
-    NOT_IMPLEMENTED;
-}
-
-fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
-    size_t* nContinuousStates) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
+//     size_t* nContinuousStates) {
+//     NOT_IMPLEMENTED;
+// }
 
 /***************************************************
 Types for Functions for Co-Simulation
