@@ -93,10 +93,19 @@ fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
 	return fmi3OK;
 }
 
+fmi3Status fmi3EnterContinuousTimeMode(fmi3Instance instance) {
+	return fmi3OK;
+}
+
 fmi3Status fmi3Terminate(fmi3Instance instance) {
 
 	// TODO: implement
 	return fmi3OK;
+}
+
+fmi3Status calculateValues(SupervisorInstance *comp) {
+    comp->data.z = 2.0 - comp->data.x;
+    return fmi3OK;
 }
 
 fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
@@ -109,8 +118,9 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 
 	if (nEventIndicators == 0) return status;
 
-	size_t i;
+	calculateValues(comp);
 
+	size_t i;
 	for (i = 0; i < nEventIndicators; i++) {
 		fmi3Status s;
 		eventIndicators[i] = comp->data.z;

@@ -460,7 +460,7 @@ fmi3Status fmi3UpdateDiscreteStates(fmi3Instance instance,
 Types for Functions for Model Exchange
 ****************************************************/
 
-fmi3Status fmi3EnterContinuousTimeMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
+// fmi3Status fmi3EnterContinuousTimeMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
 fmi3Status fmi3CompletedIntegratorStep(fmi3Instance instance,
     fmi3Boolean  noSetFMUStatePriorToCurrentPoint,

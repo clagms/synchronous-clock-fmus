@@ -69,14 +69,15 @@ fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 	fmi3Float64 startTime,
 	fmi3Boolean stopTimeDefined,
 	fmi3Float64 stopTime) {
-
-
 	return fmi3OK;
 }
 
 fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
 
-	// TODO: implement
+	return fmi3OK;
+}
+
+fmi3Status fmi3EnterContinuousTimeMode(fmi3Instance instance) {
 	return fmi3OK;
 }
 
