@@ -117,6 +117,8 @@ static void logFunction(FMIInstance* instance, FMIStatus status, const char* msg
         break;
     }
 
+    printf("[%s] ", instance->name);
+
     vprintf(msg_format, args);
 
     printf("\n");
