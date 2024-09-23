@@ -487,11 +487,11 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
-    fmi3Float64 eventIndicators[],
-    size_t nEventIndicators) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
+//     fmi3Float64 eventIndicators[],
+//     size_t nEventIndicators) {
+//     NOT_IMPLEMENTED;
+// }
 
 fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
     fmi3Float64 continuousStates[],

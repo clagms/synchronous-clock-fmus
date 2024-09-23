@@ -86,6 +86,27 @@ fmi3Status fmi3Terminate(fmi3Instance instance) {
 	return fmi3OK;
 }
 
+fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
+    fmi3Float64 eventIndicators[],
+    size_t nEventIndicators) {
+    
+	char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nEventIndicators == 0) return status;
+
+	if (nEventIndicators != 0) {
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nEventIndicators: %d.", nEventIndicators);
+		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+		status = fmi3Error;
+	}
+
+	return status;
+}
+
 fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
     const fmi3ValueReference valueReferences[],
     size_t nValueReferences,
@@ -98,7 +119,7 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 
 	fmi3Status status = fmi3OK;
 
-	if (nValueReferences == 0) return (fmi3Status)status;
+	if (nValueReferences == 0) return status;
 
 	size_t i;
 
@@ -118,7 +139,7 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 		status = max(status, s);
 		if (status > fmi3Warning) return status;
 	}
-	return (fmi3Status)status;
+	return status;
 }
 
 fmi3Status fmi3GetFloat64(fmi3Instance instance,
@@ -133,7 +154,7 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 
 	fmi3Status status = fmi3OK;
 
-	if (nValueReferences == 0) return (fmi3Status)status;
+	if (nValueReferences == 0) return status;
 
 	size_t i;
 
@@ -175,7 +196,7 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		return fmi3Error;
 	}
-	return (fmi3Status)status;
+	return status;
 }
 
 fmi3Status fmi3GetClock(fmi3Instance instance,
@@ -199,7 +220,7 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 
 	fmi3Status status = fmi3OK;
 
-	if (nValueReferences == 0) return (fmi3Status)status;
+	if (nValueReferences == 0) return status;
 
 	size_t i;
 
@@ -228,7 +249,7 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		return fmi3Error;
 	}
-	return (fmi3Status)status;
+	return status;
 }
 
 fmi3Status fmi3SetClock(fmi3Instance instance,

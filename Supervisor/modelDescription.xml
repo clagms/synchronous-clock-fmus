@@ -15,7 +15,7 @@
     canGetAndSetFMUState="true"
     canSerializeFMUState="true"
     canHandleVariableCommunicationStepSize="true"
-    providesIntermediateUpdate="true"
+    providesIntermediateUpdate="false"
     canReturnEarlyAfterIntermediateUpdate="true"
     fixedInternalStepSize="1e-2"
     hasEventMode="true"/>
