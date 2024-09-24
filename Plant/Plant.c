@@ -228,6 +228,8 @@ fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
 	}
 
 	continuousStates[0] = comp->data.x;
+
+	return status;
 }
 
 fmi3Status fmi3SetTime(fmi3Instance instance, fmi3Float64 time) {
@@ -336,4 +338,8 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 fmi3Status fmi3Terminate(fmi3Instance instance) {
 	// Nothing to do.
 	return fmi3OK;
+}
+
+void fmi3FreeInstance(fmi3Instance instance) {
+	free(instance);
 }

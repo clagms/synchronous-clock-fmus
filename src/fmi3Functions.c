@@ -62,8 +62,6 @@ fmi3Instance fmi3InstantiateScheduledExecution(
     return (fmi3Instance)NULL;
 }
 
-void fmi3FreeInstance(fmi3Instance instance) { /* not implemented */ }
-
 /* Enter and exit initialization mode, enter event mode, terminate and reset */
 //fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 //    fmi3Boolean toleranceDefined,

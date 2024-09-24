@@ -241,6 +241,8 @@ fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
+
+	return status;
 }
 
 fmi3Status fmi3GetClock(fmi3Instance instance,
@@ -408,4 +410,8 @@ fmi3Status fmi3Terminate(fmi3Instance instance) {
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
 	comp->state = Terminated;
 	return fmi3OK;
+}
+
+void fmi3FreeInstance(fmi3Instance instance) {
+	free(instance);
 }
