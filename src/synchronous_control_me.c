@@ -429,6 +429,11 @@ int main(int argc, char *argv[])
         CALL(recordVariables(outputFile, controller, plant, time));
     }
 
+    // Trigger reset just for testing purposes
+    CALL(FMI3Reset(controller));
+    CALL(FMI3Reset(plant));
+    CALL(FMI3Reset(supervisor));
+
     CALL(FMI3Terminate(controller));
     CALL(FMI3Terminate(plant));
     CALL(FMI3Terminate(supervisor));

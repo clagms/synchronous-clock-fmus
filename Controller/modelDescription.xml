@@ -8,10 +8,11 @@
 
   <ModelExchange
     modelIdentifier="Controller"
-    canGetAndSetFMUState="true"
-    canSerializeFMUState="true"/>
+    canGetAndSetFMUState="false"
+    canSerializeFMUState="false"/>
 
-  <CoSimulation
+  <!-- Not supported yet -->
+  <!-- <CoSimulation
     modelIdentifier="Controller"
     canGetAndSetFMUState="true"
     canSerializeFMUState="true"
@@ -19,7 +20,7 @@
     providesIntermediateUpdate="true"
     canReturnEarlyAfterIntermediateUpdate="true"
     fixedInternalStepSize="1e-2"
-    hasEventMode="true"/>
+    hasEventMode="true"/> -->
 
   <LogCategories>
     <Category name="logEvents" description="Log events"/>

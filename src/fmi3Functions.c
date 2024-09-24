@@ -17,11 +17,11 @@ fmi3Status fmi3SetDebugLogging(fmi3Instance instance,
     fmi3Boolean loggingOn,
     size_t nCategories,
     const fmi3String categories[]) {
-    NOT_IMPLEMENTED;
+    return fmi3OK;
 }
 
 /* Creation and destruction of FMU instances and setting debug status */
-//fmi3Instance fmi3InstantiateModelExchange(
+// fmi3Instance fmi3InstantiateModelExchange(
 //    fmi3String                 instanceName,
 //    fmi3String                 instantiationToken,
 //    fmi3String                 resourcePath,
@@ -30,7 +30,7 @@ fmi3Status fmi3SetDebugLogging(fmi3Instance instance,
 //    fmi3InstanceEnvironment    instanceEnvironment,
 //    fmi3LogMessageCallback     logMessage) {
 //    return (fmi3Instance)NULL;
-//}
+// }
 
 fmi3Instance fmi3InstantiateCoSimulation(
     fmi3String                     instanceName,
@@ -63,22 +63,22 @@ fmi3Instance fmi3InstantiateScheduledExecution(
 }
 
 /* Enter and exit initialization mode, enter event mode, terminate and reset */
-//fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
+// fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 //    fmi3Boolean toleranceDefined,
 //    fmi3Float64 tolerance,
 //    fmi3Float64 startTime,
 //    fmi3Boolean stopTimeDefined,
 //    fmi3Float64 stopTime) {
 //    NOT_IMPLEMENTED;
-//}
+// }
 
-//fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
+// fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
 // fmi3Status fmi3EnterEventMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
-//fmi3Status fmi3Terminate(fmi3Instance instance) { NOT_IMPLEMENTED; }
+// fmi3Status fmi3Terminate(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
-fmi3Status fmi3Reset(fmi3Instance instance) { NOT_IMPLEMENTED; }
+// fmi3Status fmi3Reset(fmi3Instance instance) { NOT_IMPLEMENTED; }
 
 /* Getting and setting variable values */
 fmi3Status fmi3GetFloat32(fmi3Instance instance,
@@ -89,13 +89,13 @@ fmi3Status fmi3GetFloat32(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-//fmi3Status fmi3GetFloat64(fmi3Instance instance,
+// fmi3Status fmi3GetFloat64(fmi3Instance instance,
 //    const fmi3ValueReference valueReferences[],
 //    size_t nValueReferences,
 //    fmi3Float64 values[],
 //    size_t nValues) {
 //    NOT_IMPLEMENTED;
-//}
+// }
 
 fmi3Status fmi3GetInt8(fmi3Instance instance,
     const fmi3ValueReference valueReferences[],
@@ -186,12 +186,12 @@ fmi3Status fmi3GetBinary(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-//fmi3Status fmi3GetClock(fmi3Instance instance,
+// fmi3Status fmi3GetClock(fmi3Instance instance,
 //    const fmi3ValueReference valueReferences[],
 //    size_t nValueReferences,
 //    fmi3Clock values[]) {
 //    NOT_IMPLEMENTED;
-//}
+// }
 
 fmi3Status fmi3SetFloat32(fmi3Instance instance,
     const fmi3ValueReference valueReferences[],
@@ -201,13 +201,13 @@ fmi3Status fmi3SetFloat32(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-//fmi3Status fmi3SetFloat64(fmi3Instance instance,
+// fmi3Status fmi3SetFloat64(fmi3Instance instance,
 //    const fmi3ValueReference valueReferences[],
 //    size_t nValueReferences,
 //    const fmi3Float64 values[],
 //    size_t nValues) {
 //    NOT_IMPLEMENTED;
-//}
+// }
 
 fmi3Status fmi3SetInt8(fmi3Instance instance,
     const fmi3ValueReference valueReferences[],
@@ -298,12 +298,12 @@ fmi3Status fmi3SetBinary(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-//fmi3Status fmi3SetClock(fmi3Instance instance,
+// fmi3Status fmi3SetClock(fmi3Instance instance,
 //    const fmi3ValueReference valueReferences[],
 //    size_t nValueReferences,
 //    const fmi3Clock values[]) {
 //    NOT_IMPLEMENTED;
-//}
+// }
 
 /* Getting Variable Dependency Information */
 fmi3Status fmi3GetNumberOfVariableDependencies(fmi3Instance instance,
@@ -525,7 +525,7 @@ fmi3Status fmi3GetOutputDerivatives(fmi3Instance instance,
     NOT_IMPLEMENTED;
 }
 
-//fmi3Status fmi3DoStep(fmi3Instance instance,
+// fmi3Status fmi3DoStep(fmi3Instance instance,
 //    fmi3Float64 currentCommunicationPoint,
 //    fmi3Float64 communicationStepSize,
 //    fmi3Boolean noSetFMUStatePriorToCurrentPoint,
@@ -534,7 +534,7 @@ fmi3Status fmi3GetOutputDerivatives(fmi3Instance instance,
 //    fmi3Boolean* earlyReturn,
 //    fmi3Float64* lastSuccessfulTime) {
 //    NOT_IMPLEMENTED;
-//}
+// }
 
 /***************************************************
 Types for Functions for Scheduled Execution

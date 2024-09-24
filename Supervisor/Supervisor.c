@@ -56,6 +56,15 @@ fmi3Instance fmi3InstantiateModelExchange(
 	comp->logMessage = logMessage;
 	comp->componentEnvironment = instanceEnvironment;
 
+	fmi3Reset((fmi3Instance)comp);
+
+	return (fmi3Instance)comp;
+}
+
+fmi3Status fmi3Reset(fmi3Instance instance) {
+	fmi3Status status = fmi3OK;
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+	
 	comp->state = Instantiated;
 
 	comp->data.s = false;       // Clock
@@ -64,10 +73,10 @@ fmi3Instance fmi3InstantiateModelExchange(
 	comp->data.as_previous = 1.0;
 	comp->data.z = 0.0;
 	comp->data.pz = 0.0;
-	// The following is suggested by Masoud.
+	// The following is suggested by Masoud to avoid an initial detection of the event.
 	comp->data.pz = 2.0 - comp->data.x;
 
-	return (fmi3Instance)comp;
+	return status;
 }
 
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,

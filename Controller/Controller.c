@@ -59,6 +59,16 @@ fmi3Instance fmi3InstantiateModelExchange(
 	comp->logMessage = logMessage;
 	comp->componentEnvironment = instanceEnvironment;
 
+	fmi3Reset((fmi3Instance)comp);
+	
+	return (fmi3Instance)comp;
+}
+
+
+fmi3Status fmi3Reset(fmi3Instance instance) {
+	fmi3Status status = fmi3OK;
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
 	comp->data.r = false;       // Clock
 	comp->data.xr = 0.0;                    // Sample
 	comp->data.ur = 0.0;                    // Discrete state/output
@@ -68,7 +78,7 @@ fmi3Instance fmi3InstantiateModelExchange(
 	
 	comp->state = Instantiated;
 
-	return (fmi3Instance)comp;
+	return status;
 }
 
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,

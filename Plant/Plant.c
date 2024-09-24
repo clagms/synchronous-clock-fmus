@@ -46,12 +46,21 @@ fmi3Instance fmi3InstantiateModelExchange(
 	comp->logMessage = logMessage;
 	comp->componentEnvironment = instanceEnvironment;
 
+	fmi3Reset((fmi3Instance)comp);
+
+	return (fmi3Instance)comp;
+}
+
+fmi3Status fmi3Reset(fmi3Instance instance) {
+	fmi3Status status = fmi3OK;
+	PlantInstance* comp = (PlantInstance*)instance;
+
 	comp->data.time = 0.0;
 	comp->data.x = 0.0;
 	comp->data.der_x = 0.0;
 	comp->data.u = 0.0;
 
-	return (fmi3Instance)comp;
+	return status;
 }
 
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
