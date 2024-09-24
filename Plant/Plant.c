@@ -334,7 +334,6 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 }
 
 fmi3Status fmi3Terminate(fmi3Instance instance) {
-
-	// TODO: implement
+	// Nothing to do.
 	return fmi3OK;
 }

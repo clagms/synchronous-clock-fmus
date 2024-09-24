@@ -14,7 +14,8 @@ typedef enum {
 typedef enum {
 	Instantiated = 1,
 	EventMode,
-	ContinuousTimeMode
+	ContinuousTimeMode,
+	Terminated
 } ModelState;
 
 typedef struct {
@@ -422,7 +423,7 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 }
 
 fmi3Status fmi3Terminate(fmi3Instance instance) {
-
-	// TODO: implement
+	ControllerInstance* comp = (ControllerInstance*)instance;
+	comp->state = Terminated;
 	return fmi3OK;
 }

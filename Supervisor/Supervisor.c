@@ -5,7 +5,8 @@
 typedef enum {
 	Instantiated = 1,
 	EventMode,
-	ContinuousTimeMode
+	ContinuousTimeMode,
+	Terminated
 } ModelState;
 
 typedef enum {
@@ -404,7 +405,7 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 }
 
 fmi3Status fmi3Terminate(fmi3Instance instance) {
-
-	// TODO: implement
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+	comp->state = Terminated;
 	return fmi3OK;
 }
