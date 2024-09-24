@@ -24,7 +24,7 @@ The output should look like:
 The reference result CSV is in [synchronous_control_me_out_ref.csv](synchronous_control_me_out_ref.csv)
 
 
-## Building the FMUs
+## Building the FMUs and Running Test Script
 
 First make sure to install [cmake](https://cmake.org/).
 
@@ -35,3 +35,5 @@ cmake --build build
 ```
 
 The FMUs will be created in `build/fmus`.
+
+The test script is compiled into the binary `synchronous_control_me`, available somewhere under the `build` folder.
