@@ -40,21 +40,21 @@ fmi3Instance fmi3InstantiateModelExchange(
 	fmi3InstanceEnvironment    instanceEnvironment,
 	fmi3LogMessageCallback     logMessage) {
 
-	PlantInstance* instance = (PlantInstance*)calloc(1, sizeof(PlantInstance));
+	PlantInstance* comp = (PlantInstance*)calloc(1, sizeof(PlantInstance));
 
-	if (!instance) return NULL;
+	if (!comp) return NULL;
 
-	instance->instanceName = instanceName;
-	instance->loggingOn = loggingOn;
-	instance->logMessage = logMessage;
-	instance->componentEnvironment = instanceEnvironment;
+	comp->instanceName = instanceName;
+	comp->loggingOn = loggingOn;
+	comp->logMessage = logMessage;
+	comp->componentEnvironment = instanceEnvironment;
 
-	instance->data.time = 0.0;
-	instance->data.x = 0.0;
-	instance->data.der_x = 0.0;
-	instance->data.u = 0.0;
+	comp->data.time = 0.0;
+	comp->data.x = 0.0;
+	comp->data.der_x = 0.0;
+	comp->data.u = 0.0;
 
-	return (fmi3Instance)instance;
+	return (fmi3Instance)comp;
 }
 
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,

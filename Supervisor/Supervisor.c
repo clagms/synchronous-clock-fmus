@@ -49,27 +49,27 @@ fmi3Instance fmi3InstantiateModelExchange(
 	fmi3InstanceEnvironment    instanceEnvironment,
 	fmi3LogMessageCallback     logMessage) {
 
-	SupervisorInstance* instance = (SupervisorInstance*)calloc(1, sizeof(SupervisorInstance));
+	SupervisorInstance* comp = (SupervisorInstance*)calloc(1, sizeof(SupervisorInstance));
 
-	if (!instance) return NULL;
+	if (!comp) return NULL;
 
-	instance->instanceName = instanceName;
-	instance->loggingOn = loggingOn;
-	instance->logMessage = logMessage;
-	instance->componentEnvironment = instanceEnvironment;
+	comp->instanceName = instanceName;
+	comp->loggingOn = loggingOn;
+	comp->logMessage = logMessage;
+	comp->componentEnvironment = instanceEnvironment;
 
-	instance->state = Instantiated;
+	comp->state = Instantiated;
 
-	instance->data.s = false;       // Clock
-	instance->data.x = 0.0;         // Sample
-	instance->data.as = 1.0;        // Discrete state/output
-	instance->data.as_previous = 1.0;
-	instance->data.z = 0.0;
-	instance->data.pz = 0.0;
+	comp->data.s = false;       // Clock
+	comp->data.x = 0.0;         // Sample
+	comp->data.as = 1.0;        // Discrete state/output
+	comp->data.as_previous = 1.0;
+	comp->data.z = 0.0;
+	comp->data.pz = 0.0;
 	// The following is suggested by Masoud.
-	instance->data.pz = 2.0 - instance->data.x;
+	comp->data.pz = 2.0 - comp->data.x;
 
-	return (fmi3Instance)instance;
+	return (fmi3Instance)comp;
 }
 
 fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
