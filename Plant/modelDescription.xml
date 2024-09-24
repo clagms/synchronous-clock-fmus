@@ -36,7 +36,7 @@
   </ModelVariables>
 
   <ModelStructure>
-    <Output valueReference="1"/>
+    <Output valueReference="1" dependencies="" />
     <ContinuousStateDerivative valueReference="2"/>
     <InitialUnknown valueReference="2" dependencies="1 3" dependenciesKind="constant constant"/>
   </ModelStructure>

@@ -36,8 +36,8 @@
   </ModelVariables>
 
   <ModelStructure>
-    <Output valueReference="1"/>
-    <Output valueReference="3"/>
+    <Output valueReference="1" dependencies="" />
+    <Output valueReference="3" dependencies="" />
   </ModelStructure>
 
 </fmiModelDescription>
