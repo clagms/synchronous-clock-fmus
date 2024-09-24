@@ -29,8 +29,6 @@ typedef struct {
 
 	const char* instanceName;
 
-	fmi3Boolean loggingOn;
-
 	// callback functions
 	fmi3LogMessageCallback logMessage;
 
@@ -55,7 +53,6 @@ fmi3Instance fmi3InstantiateModelExchange(
 	if (!comp) return NULL;
 
 	comp->instanceName = instanceName;
-	comp->loggingOn = loggingOn;
 	comp->logMessage = logMessage;
 	comp->componentEnvironment = instanceEnvironment;
 

@@ -3,24 +3,22 @@
 #define MAX_MSG_SIZE 100
 
 typedef enum {
-	vr_time,
-	vr_x,
-	vr_der_x,
-	vr_u
+	vr_time, // time
+	vr_x, // continuous state
+	vr_der_x, // derivative of continuous state
+	vr_u // input
 } ValueReference;
 
 typedef struct {
-	fmi3Float64 time;
-	fmi3Float64 x;
-	fmi3Float64 der_x;
-	fmi3Float64 u;
+	fmi3Float64 time; // time
+	fmi3Float64 x; // continuous state
+	fmi3Float64 der_x; // derivative of continuous state
+	fmi3Float64 u; // input
 } PlantData;
 
 typedef struct {
 
 	const char* instanceName;
-
-	fmi3Boolean loggingOn;
 
 	// callback functions
 	fmi3LogMessageCallback logMessage;
@@ -45,7 +43,6 @@ fmi3Instance fmi3InstantiateModelExchange(
 	if (!comp) return NULL;
 
 	comp->instanceName = instanceName;
-	comp->loggingOn = loggingOn;
 	comp->logMessage = logMessage;
 	comp->componentEnvironment = instanceEnvironment;
 
