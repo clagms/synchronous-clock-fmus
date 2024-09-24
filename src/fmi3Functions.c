@@ -397,20 +397,20 @@ fmi3Status fmi3ExitConfigurationMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 //     NOT_IMPLEMENTED;
 // }
 
-fmi3Status fmi3GetShiftDecimal(fmi3Instance instance,
-    const fmi3ValueReference valueReferences[],
-    size_t nValueReferences,
-    fmi3Float64 shifts[]) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetShiftDecimal(fmi3Instance instance,
+//     const fmi3ValueReference valueReferences[],
+//     size_t nValueReferences,
+//     fmi3Float64 shifts[]) {
+//     NOT_IMPLEMENTED;
+// }
 
-fmi3Status fmi3GetShiftFraction(fmi3Instance instance,
-    const fmi3ValueReference valueReferences[],
-    size_t nValueReferences,
-    fmi3UInt64 counters[],
-    fmi3UInt64 resolutions[]) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetShiftFraction(fmi3Instance instance,
+//     const fmi3ValueReference valueReferences[],
+//     size_t nValueReferences,
+//     fmi3UInt64 counters[],
+//     fmi3UInt64 resolutions[]) {
+//     NOT_IMPLEMENTED;
+// }
 
 fmi3Status fmi3SetIntervalDecimal(fmi3Instance instance,
     const fmi3ValueReference valueReferences[],

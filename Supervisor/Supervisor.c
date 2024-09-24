@@ -189,6 +189,39 @@ fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3GetShiftDecimal(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    fmi3Float64 shifts[]) {
+    char msg_buff[MAX_MSG_SIZE];
+
+	fmi3Status status = fmi3Error;
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	snprintf(msg_buff, MAX_MSG_SIZE, "Function not relevant for this fmu.");
+	comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+
+	return status;
+}
+
+fmi3Status fmi3GetShiftFraction(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    fmi3UInt64 counters[],
+    fmi3UInt64 resolutions[]) {
+    char msg_buff[MAX_MSG_SIZE];
+
+	fmi3Status status = fmi3Error;
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	snprintf(msg_buff, MAX_MSG_SIZE, "Function not relevant for this fmu.");
+	comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+
+	return status;
+}
+
 fmi3Status fmi3GetFloat64(fmi3Instance instance,
 	const fmi3ValueReference valueReferences[],
 	size_t nValueReferences,

@@ -172,6 +172,76 @@ fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3GetShiftDecimal(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    fmi3Float64 shifts[]) {
+
+	char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nValueReferences == 0) return status;
+
+	size_t i;
+
+	for (i = 0; i < nValueReferences; i++) {
+		fmi3Status s;
+		ValueReference vr = valueReferences[i];
+		switch (vr) {
+			case vr_r:
+				shifts[i] = 0.0;
+				s = fmi3OK;
+				break;
+			default:
+				snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected value reference: %d.", vr);
+				comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+				s = fmi3Error;
+		}
+		status = max(status, s);
+		if (status > fmi3Warning) return status;
+	}
+	return status;
+}
+
+fmi3Status fmi3GetShiftFraction(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    fmi3UInt64 counters[],
+    fmi3UInt64 resolutions[]) {
+    
+	char msg_buff[MAX_MSG_SIZE];
+
+	ControllerInstance* comp = (ControllerInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	if (nValueReferences == 0) return status;
+
+	size_t i;
+
+	for (i = 0; i < nValueReferences; i++) {
+		fmi3Status s;
+		ValueReference vr = valueReferences[i];
+		switch (vr) {
+			case vr_r:
+				counters[i] = 0;
+				resolutions[i] = 1;
+				s = fmi3OK;
+				break;
+			default:
+				snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected value reference: %d.", vr);
+				comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+				s = fmi3Error;
+		}
+		status = max(status, s);
+		if (status > fmi3Warning) return status;
+	}
+	return status;
+}
+
 fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
     size_t* nEventIndicators) {
 	*nEventIndicators = 0;
