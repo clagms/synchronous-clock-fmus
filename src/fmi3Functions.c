@@ -388,14 +388,14 @@ fmi3Status fmi3ExitConfigurationMode(fmi3Instance instance) { NOT_IMPLEMENTED; }
 //     NOT_IMPLEMENTED;
 // }
 
-fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
-    const fmi3ValueReference valueReferences[],
-    size_t nValueReferences,
-    fmi3UInt64 counters[],
-    fmi3UInt64 resolutions[],
-    fmi3IntervalQualifier qualifiers[]) {
-    NOT_IMPLEMENTED;
-}
+// fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
+//     const fmi3ValueReference valueReferences[],
+//     size_t nValueReferences,
+//     fmi3UInt64 counters[],
+//     fmi3UInt64 resolutions[],
+//     fmi3IntervalQualifier qualifiers[]) {
+//     NOT_IMPLEMENTED;
+// }
 
 fmi3Status fmi3GetShiftDecimal(fmi3Instance instance,
     const fmi3ValueReference valueReferences[],

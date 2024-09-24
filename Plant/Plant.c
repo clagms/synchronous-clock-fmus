@@ -98,6 +98,25 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 	return status;
 }
 
+fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
+    const fmi3ValueReference valueReferences[],
+    size_t nValueReferences,
+    fmi3UInt64 counters[],
+    fmi3UInt64 resolutions[],
+    fmi3IntervalQualifier qualifiers[]) {
+
+	char msg_buff[MAX_MSG_SIZE];
+
+	fmi3Status status = fmi3Error;
+
+	PlantInstance* comp = (PlantInstance*)instance;
+
+	snprintf(msg_buff, MAX_MSG_SIZE, "Function not relevant for this fmu.");
+	comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
+
+	return status;
+}
+
 fmi3Status fmi3GetNumberOfEventIndicators(fmi3Instance instance,
     size_t* nEventIndicators) {
 	*nEventIndicators = 0;
