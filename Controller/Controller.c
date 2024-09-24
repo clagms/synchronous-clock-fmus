@@ -261,7 +261,7 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 	if (nEventIndicators == 0) return status;
 
 	if (nEventIndicators != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nEventIndicators: %d.", nEventIndicators);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nEventIndicators: %zd.", nEventIndicators);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
@@ -288,7 +288,7 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 	if (nContinuousStates == 0) return status;
 
 	if (nContinuousStates != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %zd.", nContinuousStates);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
@@ -309,7 +309,7 @@ fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
 	if (nContinuousStates == 0) return status;
 
 	if (nContinuousStates != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %zd.", nContinuousStates);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
@@ -485,7 +485,7 @@ fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
 	if (nContinuousStates == 0) return status;
 
 	if (nContinuousStates != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %zd.", nContinuousStates);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}

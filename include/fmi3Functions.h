@@ -59,6 +59,7 @@ extern "C" {
 #include "fmi3PlatformTypes.h"
 #include "fmi3FunctionTypes.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /*
 Allow override of FMI3_FUNCTION_PREFIX: If FMI3_OVERRIDE_FUNCTION_PREFIX
