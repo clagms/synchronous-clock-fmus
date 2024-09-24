@@ -89,7 +89,8 @@ fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 }
 
 fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
-
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+	comp->data.pz = comp->data.z;
 	return fmi3OK;
 }
 
@@ -113,7 +114,7 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 
 	if (nEventIndicators == 0) return status;
 
-	comp->data.pz = comp->data.z;
+	// comp->data.pz = comp->data.z;
 	comp->data.z = 2.0 - comp->data.x;
 
 	size_t i;
@@ -259,7 +260,7 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 				snprintf(msg_buff, MAX_MSG_SIZE, "Value of clock s being observed outside of event mode.");
 				comp->logMessage(comp->componentEnvironment, status, "Warning", msg_buff);
 				s = fmi3Warning;
-				values[i] = comp->data.as_previous;
+				values[i] = comp->data.as;
 			}
 			break;
 		case vr_x:
@@ -442,6 +443,8 @@ fmi3Status fmi3UpdateDiscreteStates(fmi3Instance instance,
 		comp->data.as = comp->data.as_previous * -1.0;
 		comp->data.s = false;
 	}
+
+	comp->data.pz = comp->data.z;
 	
 	*discreteStatesNeedUpdate = fmi3False;
 	*terminateSimulation = fmi3False;
