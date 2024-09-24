@@ -1,21 +1,16 @@
-# synchronous-clock-fmus
+# Examples of Synchronous Clocked FMUs
 
 ***NOTE: The orchestration code shown in [synchronous_control_me.c](src/synchronous_control_me.c) is not an official FMI recommendation regarding how these FMUs should be orchestrated. It represents one possible way, for the purposes of testing the FMU and highlighting how the different clocks are used.***
 
 This example consists of a [Controller](./Controller), a [Plant](./Plant), and a [Supervisor](./Supervisor) FMU.
 It uses model exchange in FMI3.0.
-The Controller fmu declares an input periodic clock,
-and the supervisor has an output clock that triggers when a state event occurs.
-The output clock of the supervisor is connected to another input clock of the controller.
+The Controller FMU declares an input periodic clock, and the Supervisor has an output clock that triggers when a state event occurs.
+The output clock of the Supervisor is connected to another input clock of the controller.
 
-The key part of the example is to show that both clocks can activate at the same time,
-if the conditions are right (and the conditions are right roughly once per co-simulation).
-When that happens, the dependencies between the variables must be taken into account,
-in order to correctly propagate the values for the clocked partitions.
+The key part of the example is to show that both clocks can activate at the same time, if the conditions are right (and the conditions are right roughly once per co-simulation).
+When that happens, the dependencies between the variables must be taken into account, in order to correctly propagate the values for the clocked partitions.
 
-The supervisor monitors the plant's continuous output and when a particular event happens,
-activates a clock and inverts one of the controller's inputs,
-which in turn changes the controller algorithm.
+The supervisor monitors the plant's continuous output and when a particular event happens, activates a clock and inverts one of the controller's inputs, which in turn changes the controller algorithm.
 The plant is just solving a basic ODE with an input from the controller.
 
 The scenario is as follows:
@@ -31,9 +26,10 @@ The reference result CSV is in [synchronous_control_me_out_ref.csv](synchronous_
 
 ## Building the FMUs
 
-To build the FMUs run
+First make sure to install [cmake](https://cmake.org/).
 
-```
+To build the FMUs run
+```powershell
 cmake -B build .
 cmake --build build
 ```
