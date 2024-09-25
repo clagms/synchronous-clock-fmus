@@ -145,7 +145,7 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 	if (nContinuousStates == 0) return status;
 
 	if (nContinuousStates != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %zd.", nContinuousStates);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
@@ -296,7 +296,7 @@ fmi3Status fmi3GetContinuousStates(fmi3Instance instance,
 	if (nContinuousStates == 0) return status;
 
 	if (nContinuousStates != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %zd.", nContinuousStates);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
@@ -356,7 +356,7 @@ fmi3Status fmi3SetContinuousStates(fmi3Instance instance,
 	if (nContinuousStates == 0) return status;
 
 	if (nContinuousStates != 0) {
-		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %d.", nContinuousStates);
+		snprintf(msg_buff, MAX_MSG_SIZE, "Unexpected nContinuousStates: %zd.", nContinuousStates);
 		comp->logMessage(comp->componentEnvironment, status, "Error", msg_buff);
 		status = fmi3Error;
 	}
@@ -415,8 +415,12 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
 fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
 	comp->state = EventMode;
-
-	if (comp->data.pz * comp->data.z < 0.0) {
+	
+	int isZC = 0;
+	comp->state = EventMode;
+	isZC = comp->data.pz * comp->data.z < 0.0;
+	isZC |= comp->data.pz != 0 && comp->data.z == 0;
+	if (isZC) {
 		// Clock s is ticking
 		comp->data.s = true;
 	}
