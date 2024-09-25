@@ -51,6 +51,33 @@ fmi3Instance fmi3InstantiateModelExchange(
 	return (fmi3Instance)comp;
 }
 
+fmi3Instance fmi3InstantiateCoSimulation(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourcePath,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    eventModeUsed,
+    fmi3Boolean                    earlyReturnAllowed,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3LogMessageCallback         logMessage,
+    fmi3IntermediateUpdateCallback intermediateUpdate) {
+    
+	PlantInstance* comp = (PlantInstance*)calloc(1, sizeof(PlantInstance));
+
+	if (!comp) return NULL;
+
+	comp->instanceName = instanceName;
+	comp->logMessage = logMessage;
+	comp->componentEnvironment = instanceEnvironment;
+
+	fmi3Reset((fmi3Instance)comp);
+
+	return (fmi3Instance)comp;
+}
+
 fmi3Status fmi3Reset(fmi3Instance instance) {
 	fmi3Status status = fmi3OK;
 	PlantInstance* comp = (PlantInstance*)instance;
@@ -185,6 +212,10 @@ fmi3Status fmi3GetNumberOfContinuousStates(fmi3Instance instance,
     return fmi3OK;
 }
 
+void update_derivative(PlantInstance* comp) {
+	comp->data.der_x = - comp->data.x + comp->data.u;
+}
+
 fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
     fmi3Float64 derivatives[],
     size_t nContinuousStates) {
@@ -203,7 +234,7 @@ fmi3Status fmi3GetContinuousStateDerivatives(fmi3Instance instance,
 		status = fmi3Error;
 	}
 
-	comp->data.der_x = - comp->data.x + comp->data.u;
+	update_derivative(comp);
 
 	derivatives[0] = comp->data.der_x;
 
@@ -391,8 +422,25 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 	fmi3Boolean* terminateSimulation,
 	fmi3Boolean* earlyReturn,
 	fmi3Float64* lastSuccessfulTime) {
+	
+	PlantInstance* comp = (PlantInstance*)instance;
 
-	return fmi3Error; // Not implemented
+	fmi3Status status = fmi3OK;
+
+	update_derivative(comp);
+
+	comp->data.x = comp->data.x + communicationStepSize * comp->data.der_x;
+
+	*eventHandlingNeeded = fmi3False;
+	*terminateSimulation = fmi3False;
+	*earlyReturn = fmi3False;
+	*lastSuccessfulTime = currentCommunicationPoint + communicationStepSize;
+
+	return status;
+}
+
+fmi3Status fmi3EnterStepMode(fmi3Instance instance) { 
+	return fmi3OK;
 }
 
 fmi3Status fmi3Terminate(fmi3Instance instance) {

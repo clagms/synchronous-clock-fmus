@@ -61,6 +61,33 @@ fmi3Instance fmi3InstantiateModelExchange(
 	return (fmi3Instance)comp;
 }
 
+fmi3Instance fmi3InstantiateCoSimulation(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourcePath,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    eventModeUsed,
+    fmi3Boolean                    earlyReturnAllowed,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3LogMessageCallback         logMessage,
+    fmi3IntermediateUpdateCallback intermediateUpdate) {
+    
+	SupervisorInstance* comp = (SupervisorInstance*)calloc(1, sizeof(SupervisorInstance));
+
+	if (!comp) return NULL;
+
+	comp->instanceName = instanceName;
+	comp->logMessage = logMessage;
+	comp->componentEnvironment = instanceEnvironment;
+
+	fmi3Reset((fmi3Instance)comp);
+
+	return (fmi3Instance)comp;
+}
+
 fmi3Status fmi3Reset(fmi3Instance instance) {
 	fmi3Status status = fmi3OK;
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
@@ -88,8 +115,13 @@ fmi3Status fmi3EnterInitializationMode(fmi3Instance instance,
 	return fmi3OK;
 }
 
+void update_event_indicator(SupervisorInstance* comp) {
+	comp->data.z = 2.0 - comp->data.x;
+}
+
 fmi3Status fmi3ExitInitializationMode(fmi3Instance instance) {
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
+	update_event_indicator(comp);
 	comp->data.pz = comp->data.z;
 	return fmi3OK;
 }
@@ -114,8 +146,7 @@ fmi3Status fmi3GetEventIndicators(fmi3Instance instance,
 
 	if (nEventIndicators == 0) return status;
 
-	// comp->data.pz = comp->data.z;
-	comp->data.z = 2.0 - comp->data.x;
+	update_event_indicator(comp);
 
 	size_t i;
 	for (i = 0; i < nEventIndicators; i++) {
@@ -412,14 +443,14 @@ fmi3Status fmi3SetClock(fmi3Instance instance,
 	return fmi3OK;
 }
 
+bool isZeroCrossing(double pz, double z) {
+	return pz * z < 0.0 || (pz != 0 && z == 0);
+}
+
 fmi3Status fmi3EnterEventMode(fmi3Instance instance) {
 	SupervisorInstance* comp = (SupervisorInstance*)instance;
 	comp->state = EventMode;
-	
-	int isZC = 0;
-	comp->state = EventMode;
-	isZC = comp->data.pz * comp->data.z < 0.0;
-	isZC |= comp->data.pz != 0 && comp->data.z == 0;
+	bool isZC = isZeroCrossing(comp->data.pz, comp->data.z);
 	if (isZC) {
 		// Clock s is ticking
 		comp->data.s = true;
@@ -468,6 +499,36 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 	fmi3Boolean* terminateSimulation,
 	fmi3Boolean* earlyReturn,
 	fmi3Float64* lastSuccessfulTime) {
+	
+	char msg_buff[MAX_MSG_SIZE];
+
+	SupervisorInstance* comp = (SupervisorInstance*)instance;
+
+	fmi3Status status = fmi3OK;
+
+	update_event_indicator(comp);
+
+	// Log vars for event detection
+	snprintf(msg_buff, MAX_MSG_SIZE, "Event indicators:\n\tpz=%f\n\tz=%f", comp->data.pz, comp->data.z);
+	comp->logMessage(comp->componentEnvironment, status, "Debug", msg_buff);
+
+	bool stateEvent = isZeroCrossing(comp->data.pz, comp->data.z);
+
+	if (stateEvent) {
+		*eventHandlingNeeded = fmi3True;
+	}
+	else {
+		*eventHandlingNeeded = fmi3False;
+	}
+
+	*terminateSimulation = fmi3False;
+	*earlyReturn = fmi3False;
+	*lastSuccessfulTime = currentCommunicationPoint + communicationStepSize;
+
+	return status;
+}
+
+fmi3Status fmi3EnterStepMode(fmi3Instance instance) { 
 	return fmi3OK;
 }
 

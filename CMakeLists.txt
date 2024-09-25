@@ -102,3 +102,22 @@ set_target_properties(synchronous_control_me PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG   temp
     RUNTIME_OUTPUT_DIRECTORY_RELEASE temp
 )
+
+# synchronous_control_cs
+add_executable (synchronous_control_cs
+    include/FMI.h
+    include/FMI3.h
+    src/fmi3Functions.c
+    src/FMI3.c
+    src/FMI.c
+    src/synchronous_control_cs.c
+)
+add_dependencies(synchronous_control_cs Controller Plant Supervisor)
+set_target_properties(synchronous_control_cs PROPERTIES FOLDER src)
+target_include_directories(synchronous_control_cs PRIVATE include Controller Plant Supervisor)
+target_link_libraries(synchronous_control_cs ${LIBRARIES})
+set_target_properties(synchronous_control_cs PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY         temp
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG   temp
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE temp
+)

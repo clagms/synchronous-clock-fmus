@@ -64,6 +64,32 @@ fmi3Instance fmi3InstantiateModelExchange(
 	return (fmi3Instance)comp;
 }
 
+fmi3Instance fmi3InstantiateCoSimulation(
+    fmi3String                     instanceName,
+    fmi3String                     instantiationToken,
+    fmi3String                     resourcePath,
+    fmi3Boolean                    visible,
+    fmi3Boolean                    loggingOn,
+    fmi3Boolean                    eventModeUsed,
+    fmi3Boolean                    earlyReturnAllowed,
+    const fmi3ValueReference       requiredIntermediateVariables[],
+    size_t                         nRequiredIntermediateVariables,
+    fmi3InstanceEnvironment        instanceEnvironment,
+    fmi3LogMessageCallback         logMessage,
+    fmi3IntermediateUpdateCallback intermediateUpdate) {
+    
+	ControllerInstance* comp = (ControllerInstance*)calloc(1, sizeof(ControllerInstance));
+
+	if (!comp) return NULL;
+
+	comp->instanceName = instanceName;
+	comp->logMessage = logMessage;
+	comp->componentEnvironment = instanceEnvironment;
+
+	fmi3Reset((fmi3Instance)comp);
+	
+	return (fmi3Instance)comp;
+}
 
 fmi3Status fmi3Reset(fmi3Instance instance) {
 	fmi3Status status = fmi3OK;
@@ -534,7 +560,17 @@ fmi3Status fmi3DoStep(fmi3Instance instance,
 	fmi3Boolean* earlyReturn,
 	fmi3Float64* lastSuccessfulTime) {
 
-	// TODO: implement
+	*eventHandlingNeeded = fmi3False;
+	*terminateSimulation = fmi3False;
+	*earlyReturn = fmi3False;
+	*lastSuccessfulTime = currentCommunicationPoint + communicationStepSize;
+		
+	return fmi3OK;
+}
+
+fmi3Status fmi3EnterStepMode(fmi3Instance instance) {
+	ControllerInstance* comp = (ControllerInstance*)instance;
+	comp->state = ContinuousTimeMode;
 	return fmi3OK;
 }
 

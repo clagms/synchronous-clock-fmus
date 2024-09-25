@@ -1,6 +1,6 @@
 # Examples of Synchronous Clocked FMUs
 
-***NOTE: The orchestration code shown in [synchronous_control_me.c](src/synchronous_control_me.c) is not an official FMI recommendation regarding how these FMUs should be orchestrated. It represents one possible way, for the purposes of testing the FMU and highlighting how the different clocks are used.***
+**NOTE: The orchestration code shown in [synchronous_control_me.c](src/synchronous_control_me.c) and [synchronous_control_cs.c](src/synchronous_control_cs.c) do not constitute official FMI recommendations regarding how these FMUs should be orchestrated. These represents one way, for the purposes of testing the FMU and highlighting how the different clocks are used.**
 
 This example consists of a [Controller](./Controller), a [Plant](./Plant), and a [Supervisor](./Supervisor) FMU.
 It uses model exchange in FMI3.0.
@@ -36,4 +36,4 @@ cmake --build build
 
 The FMUs will be created in `build/fmus`.
 
-The test script is compiled into the binary `synchronous_control_me`, available somewhere under the `build` folder.
+The test scripts are compiled into binaries `synchronous_control_me` and `synchronous_control_cs`, running Model Exchange and Co-simulation, respectively, and are available somewhere under the `build` folder.

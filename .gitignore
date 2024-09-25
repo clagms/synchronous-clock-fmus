@@ -1,4 +1,5 @@
 build/
 .vscode/
 ~*.xlsx
-/synchronous_control_me_out.xlsx
+synchronous_control_me_out.xlsx
+synchronous_control_cs_out.xlsx
