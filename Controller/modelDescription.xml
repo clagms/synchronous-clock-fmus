@@ -11,16 +11,15 @@
     canGetAndSetFMUState="false"
     canSerializeFMUState="false"/>
 
-  <!-- Not supported yet -->
-  <!-- <CoSimulation
+  <CoSimulation
     modelIdentifier="Controller"
-    canGetAndSetFMUState="true"
-    canSerializeFMUState="true"
+    canGetAndSetFMUState="false"
+    canSerializeFMUState="false"
     canHandleVariableCommunicationStepSize="true"
-    providesIntermediateUpdate="true"
-    canReturnEarlyAfterIntermediateUpdate="true"
+    providesIntermediateUpdate="false"
+    canReturnEarlyAfterIntermediateUpdate="false"
     fixedInternalStepSize="1e-2"
-    hasEventMode="true"/> -->
+    hasEventMode="true"/>
 
   <LogCategories>
     <Category name="logEvents" description="Log events"/>
