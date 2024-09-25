@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "FMI3.h"
 
@@ -931,6 +932,14 @@ FMIStatus FMI3UpdateDiscreteStates(FMIInstance *instance,
     fmi3Boolean* valuesOfContinuousStatesChanged,
     fmi3Boolean* nextEventTimeDefined,
     fmi3Float64* nextEventTime) {
+    
+    // Ensure values are at defaults:
+    *nominalsOfContinuousStatesChanged = fmi3False;
+    *valuesOfContinuousStatesChanged = fmi3False;
+    *nextEventTimeDefined = fmi3False;
+    *terminateSimulation = fmi3False;
+    *discreteStatesNeedUpdate = fmi3False;
+    *nextEventTime = INFINITY;
 
     FMIStatus status = (FMIStatus)instance->fmi3Functions->fmi3UpdateDiscreteStates(instance->component, discreteStatesNeedUpdate, terminateSimulation, nominalsOfContinuousStatesChanged, valuesOfContinuousStatesChanged, nextEventTimeDefined, nextEventTime);
 

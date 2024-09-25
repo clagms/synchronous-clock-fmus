@@ -1,5 +1,4 @@
 build/
 .vscode/
-TODO.md
 ~*.xlsx
 /synchronous_control_me_out.xlsx
