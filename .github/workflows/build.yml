@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [  macos-13, windows-latest ] # ubuntu-latest, , macos-latest
+        os: [  macos-13, windows-latest, ubuntu-20.04 ] # ubuntu-latest, , macos-latest
         platform: [ x64 ] #x32, x64 ]
         exclude:
           - os: macos-latest
@@ -27,6 +27,21 @@ jobs:
 
       - name: Build
         run: cmake -G"Unix Makefiles" . && make
+
+      - name: List windows dependencies
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: find . -name *.dll -exec echo {} \; -exec bash -c "objdump -p {} | grep 'DLL Name:'" \;
+
+      - name: List linux dependencies
+        if: matrix.os == 'ubuntu-20.04'
+        shell: bash
+        run: find . -name *.so -exec echo {} \; -exec ldd {} \;
+
+      - name: List macos dependencies
+        if: matrix.os == 'macos-13'
+        shell: bash
+        run: find . -name *.dylib -exec echo {} \; -exec otool -L {} \;
 
 
       - name: artifact upload windows
