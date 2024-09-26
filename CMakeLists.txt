@@ -59,6 +59,9 @@ target_include_directories(${TARGET_NAME} PRIVATE
   include
 )
 
+set_target_properties(${TARGET_NAME}
+                      PROPERTIES POSITION_INDEPENDENT_CODE ON, PREFIX "")
+
 set_target_properties(${TARGET_NAME} PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY         "${FMU_BUILD_DIR}/binaries/${FMI_PLATFORM}"
   RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${FMU_BUILD_DIR}/binaries/${FMI_PLATFORM}"
@@ -97,6 +100,9 @@ add_dependencies(synchronous_control_me Controller Plant Supervisor)
 set_target_properties(synchronous_control_me PROPERTIES FOLDER src)
 target_include_directories(synchronous_control_me PRIVATE include Controller Plant Supervisor)
 target_link_libraries(synchronous_control_me ${LIBRARIES})
+if(WIN32)
+    target_link_libraries(synchronous_control_me Shlwapi)
+endif()
 set_target_properties(synchronous_control_me PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY         temp
     RUNTIME_OUTPUT_DIRECTORY_DEBUG   temp
@@ -116,6 +122,9 @@ add_dependencies(synchronous_control_cs Controller Plant Supervisor)
 set_target_properties(synchronous_control_cs PROPERTIES FOLDER src)
 target_include_directories(synchronous_control_cs PRIVATE include Controller Plant Supervisor)
 target_link_libraries(synchronous_control_cs ${LIBRARIES})
+if(WIN32)
+    target_link_libraries(synchronous_control_cs Shlwapi)
+endif()
 set_target_properties(synchronous_control_cs PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY         temp
     RUNTIME_OUTPUT_DIRECTORY_DEBUG   temp

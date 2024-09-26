@@ -1,5 +1,5 @@
 #include "fmi3Functions.h"
-
+#include "Custom.h"
 #define MAX_MSG_SIZE 100
 
 typedef enum {
