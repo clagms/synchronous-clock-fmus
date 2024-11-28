@@ -148,6 +148,7 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 		switch (vr) {
 			case vr_r:
 				intervals[i] = 0.1;
+				qualifiers[i] = fmi3IntervalUnchanged;
 				s = fmi3OK;
 				break;
 			default:
@@ -185,6 +186,7 @@ fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
 			case vr_r:
 				counters[i] = 1;
 				resolutions[i] = 10;
+				qualifiers[i] = fmi3IntervalUnchanged;
 				s = fmi3OK;
 				break;
 			default:
