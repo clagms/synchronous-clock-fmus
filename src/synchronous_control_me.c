@@ -21,17 +21,15 @@ int main(int argc, char *argv[])
 {
     printf("Running Supervisory Control example... \n");
 
+    // Flags for FMI3UpdateDiscreteStates
+    FMI3UpdateDiscreteStatesOutput controller_FMI3UpdateDiscreteStatesOutput = { fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, 0.0 };
+    FMI3UpdateDiscreteStatesOutput plant_FMI3UpdateDiscreteStatesOutput = { fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, 0.0 };
+    FMI3UpdateDiscreteStatesOutput supervisor_FMI3UpdateDiscreteStatesOutput = { fmi3False, fmi3False, fmi3False, fmi3False, fmi3False, 0.0 };
+
     FMIStatus status = FMIOK;
     fmi3Float64 h = FIXED_STEP;
     fmi3Float64 tNext = h;
     fmi3Float64 time = 0;
-
-    fmi3Boolean nominalsChanged = fmi3False;
-    fmi3Boolean statesChanged = fmi3False;
-    fmi3Boolean nextEventTimeDefined = fmi3False;
-    fmi3Boolean terminateSimulation = fmi3False;
-    fmi3Boolean discreteStatesNeedUpdate = fmi3False;
-    fmi3Float64 nextEventTime = INFINITY;
 
     // Will hold exchanged values: Controller -> Plantmodel
     fmi3Float64 controller_vals[] = { 0.0 };
@@ -142,8 +140,20 @@ int main(int argc, char *argv[])
                 CALL(handleTimeEventController(controller, plant));
 
                 // Update discrete states of the controller
-                CALL(FMI3UpdateDiscreteStates(controller, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
-                CALL(FMI3UpdateDiscreteStates(plant, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(controller, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(plant, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.nextEventTime));
 
                 // Exit event mode
                 CALL(FMI3EnterContinuousTimeMode(controller));
@@ -161,8 +171,20 @@ int main(int argc, char *argv[])
                 CALL(handleStateEventSupervisor(controller, supervisor));
 
                 // Update discrete states of the controller and supervisor
-                CALL(FMI3UpdateDiscreteStates(supervisor, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
-                CALL(FMI3UpdateDiscreteStates(controller, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(supervisor, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(controller, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nextEventTime));
 
                 // Exit event mode
                 CALL(FMI3EnterContinuousTimeMode(supervisor));
@@ -189,9 +211,27 @@ int main(int argc, char *argv[])
                 CALL(handleTimeEventController(controller, plant));
 
                 // Update discrete states of the controller and supervisor
-                CALL(FMI3UpdateDiscreteStates(supervisor, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
-                CALL(FMI3UpdateDiscreteStates(controller, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
-                CALL(FMI3UpdateDiscreteStates(plant, &discreteStatesNeedUpdate, &terminateSimulation, &nominalsChanged, &statesChanged, &nextEventTimeDefined, &nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(supervisor, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &supervisor_FMI3UpdateDiscreteStatesOutput.nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(controller, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &controller_FMI3UpdateDiscreteStatesOutput.nextEventTime));
+                CALL(FMI3UpdateDiscreteStates(plant, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.discreteStatesNeedUpdate, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.terminateSimulation, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.nominalsChanged, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.statesChanged, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.nextEventTimeDefined, 
+                    &plant_FMI3UpdateDiscreteStatesOutput.nextEventTime));
 
                 // Exit event mode
                 CALL(FMI3EnterContinuousTimeMode(supervisor));

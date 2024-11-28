@@ -118,6 +118,17 @@ static void logFunction(FMIInstance* instance, FMIStatus status, const char* msg
     va_end(args);
 }
 
+//**************** Output structures */
+
+// Define struct to hold outputs of FMI3UpdateDiscreteStates
+typedef struct {
+    fmi3Boolean discreteStatesNeedUpdate;
+    fmi3Boolean terminateSimulation;
+    fmi3Boolean nominalsChanged;
+    fmi3Boolean statesChanged;
+    fmi3Boolean nextEventTimeDefined;
+    fmi3Float64 nextEventTime;
+} FMI3UpdateDiscreteStatesOutput;
 
 //**************** Output aux functions ******************//
 
