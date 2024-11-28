@@ -107,9 +107,13 @@ int main(int argc, char *argv[])
     // Record initial outputs
     CALL(recordVariables(outputFile, controller, plant, time));
 
-    while (time + h <= tEnd) {
+    // Get number of simulation steps to be carried out. 
+    int nSteps = (int)ceil((tEnd - tStart) / h) + 1; // +1 to include tEnd
+
+    // Main simulation loop
+    for (int i = 0; i < nSteps; i++) {
         // Advance time and update timers
-        time += h;
+        time = tStart + i*h;
         controller_r_timer -= h;
 
         // Check for state events or time events.

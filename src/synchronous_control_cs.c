@@ -102,8 +102,11 @@ int main(int argc, char *argv[])
     // Record initial outputs
     CALL(recordVariables(outputFile, controller, plant, time));
 
-    while (time + h <= tEnd) {
+    // Get number of simulation steps to be carried out. 
+    int nSteps = (int)ceil((tEnd - tStart) / h) + 1; // +1 to include tEnd
 
+    // Main simulation loop
+    for (int i = 0; i < nSteps; i++) {
         // Check for state events or time events.
         bool timeEvent = controller_r_timer <= 0.0;
         bool stateEvent = false;
@@ -113,7 +116,7 @@ int main(int argc, char *argv[])
         CALL(FMI3DoStep(supervisor, time, h, fmi3True, &stateEvent, &terminateSimulation, &earlyReturn, &last_successul_time));
 
         // Advance time and update timers
-        time += h;
+        time = tStart + i*h;
         controller_r_timer -= h;
 
         // Exchange data Plantmodel -> Supervisor
