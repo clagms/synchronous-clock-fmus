@@ -4,7 +4,7 @@
 
 typedef enum {
 	vr_r = 1,   // Clock
-	vr_xr,      // Sample
+	vr_x,      // Sample
 	vr_ur,      // Discrete state/output
 	vr_pre_ur,  // Previous ur
 	vr_as,      // Local var
@@ -20,7 +20,7 @@ typedef enum {
 
 typedef struct {
 	bool r;         // Clock
-	double xr;      // Sample
+	double x;      // Sample
 	double ur;      // Discrete state/output
 	double pre_ur;  // Previous ur
 	double as;      // Local var
@@ -96,7 +96,7 @@ fmi3Status fmi3Reset(fmi3Instance instance) {
 	ControllerInstance* comp = (ControllerInstance*)instance;
 
 	comp->data.r = false;       // Clock
-	comp->data.xr = 0.0;                    // Sample
+	comp->data.x = 0.0;                    // Sample
 	comp->data.ur = 0.0;                    // Discrete state/output
 	comp->data.pre_ur = 0.0;                // Previous ur
 	comp->data.as = 1.0;                    // In var from Supervisor
@@ -365,8 +365,8 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_xr:
-			values[i] = comp->data.xr;
+		case vr_x:
+			values[i] = comp->data.x;
 			s = fmi3OK;
 			break;
 		case vr_ur:
@@ -430,8 +430,8 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_xr:
-			comp->data.xr = values[i];
+		case vr_x:
+			comp->data.x = values[i];
 			s = fmi3OK;
 			break;
 		case vr_as:
