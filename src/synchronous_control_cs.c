@@ -113,10 +113,6 @@ int main(int argc, char *argv[])
 
     // Main simulation loop
     for (int i = 0; i < nSteps; i++) {
-        // Check for state events or time events.
-        bool timeEvent = controller_r_timer <= 0.0;
-        bool stateEvent = false;
-
         CALL(FMI3DoStep(controller, time, h, fmi3True, 
             &controller_FMI3DoStepOutput.stateEvent, 
             &controller_FMI3DoStepOutput.terminateSimulation, 
@@ -133,12 +129,15 @@ int main(int argc, char *argv[])
             &supervisor_FMI3DoStepOutput.earlyReturn, 
             &supervisor_FMI3DoStepOutput.last_successul_time));
 
-        // Update stateEvent
-        stateEvent = controller_FMI3DoStepOutput.stateEvent || plant_FMI3DoStepOutput.stateEvent || supervisor_FMI3DoStepOutput.stateEvent;
-
         // Advance time and update timers
         time = tStart + i*h;
         controller_r_timer -= h;
+
+        // Check for state events or time events.
+        bool timeEvent = controller_r_timer <= 0.0;
+        bool stateEvent = false;
+        // Update stateEvent
+        stateEvent = controller_FMI3DoStepOutput.stateEvent || plant_FMI3DoStepOutput.stateEvent || supervisor_FMI3DoStepOutput.stateEvent;
 
         // Exchange data Plantmodel -> Supervisor
         CALL(FMI3GetFloat64(plant, plantmodel_y_refs, 1, plantmodel_vals, 1));
