@@ -76,10 +76,6 @@ int main(int argc, char *argv[])
     CALL(FMI3GetFloat64(controller, controller_y_refs, 1, controller_vals, 1));
     CALL(FMI3SetFloat64(plant,      plantmodel_u_refs, 1, controller_vals, 1));
 
-    // Exchange data Plantmodel -> Controller
-    CALL(FMI3GetFloat64(plant,      plantmodel_y_refs, 1, plantmodel_vals, 1));
-    CALL(FMI3SetFloat64(controller, controller_u_refs, 1, plantmodel_vals, 1));
-
     // Exchange data Plantmodel -> Supervisor
     CALL(FMI3SetFloat64(supervisor, supervisor_in_refs, 1, plantmodel_vals, 1));
 
@@ -257,9 +253,7 @@ int main(int argc, char *argv[])
         // Exchange data Plantmodel -> Supervisor
         CALL(FMI3GetFloat64(plant, plantmodel_y_refs, 1, plantmodel_vals, 1));
         CALL(FMI3SetFloat64(supervisor, supervisor_in_refs, 1, plantmodel_vals, 1));
-        // Exchange data Plantmodel -> Controller
-        CALL(FMI3SetFloat64(controller, controller_u_refs, 1, plantmodel_vals, 1));
-
+        
         // Record data
         CALL(recordVariables(outputFile, controller, plant, time));
     }

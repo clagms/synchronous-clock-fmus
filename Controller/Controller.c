@@ -4,11 +4,10 @@
 
 typedef enum {
 	vr_r = 1,   // Clock
-	vr_x,      // Sample
-	vr_ur,      // Discrete state/output
-	vr_pre_ur,  // Previous ur
-	vr_as,      // Local var
-	vr_s        // Clock from supervisor
+	vr_ur = 3,      // Discrete state/output
+	vr_pre_ur = 4,  // Previous ur
+	vr_as = 5,      // Local var
+	vr_s = 6        // Clock from supervisor
 } ValueReference;
 
 typedef enum {
@@ -20,7 +19,6 @@ typedef enum {
 
 typedef struct {
 	bool r;         // Clock
-	double x;      // Sample
 	double ur;      // Discrete state/output
 	double pre_ur;  // Previous ur
 	double as;      // Local var
@@ -96,7 +94,6 @@ fmi3Status fmi3Reset(fmi3Instance instance) {
 	ControllerInstance* comp = (ControllerInstance*)instance;
 
 	comp->data.r = false;       // Clock
-	comp->data.x = 0.0;                    // Sample
 	comp->data.ur = 0.0;                    // Discrete state/output
 	comp->data.pre_ur = 0.0;                // Previous ur
 	comp->data.as = 1.0;                    // In var from Supervisor
@@ -365,10 +362,6 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_x:
-			values[i] = comp->data.x;
-			s = fmi3OK;
-			break;
 		case vr_ur:
 			if (comp->data.r == true) {
 				values[i] = comp->data.ur + comp->data.as;
@@ -430,10 +423,6 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_x:
-			comp->data.x = values[i];
-			s = fmi3OK;
-			break;
 		case vr_as:
 			comp->data.as = values[i];
 			s = fmi3OK;

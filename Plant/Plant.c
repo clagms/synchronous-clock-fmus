@@ -4,10 +4,10 @@
 #define MAX_MSG_SIZE 100
 
 typedef enum {
-	vr_time, // time
-	vr_x, // continuous state
-	vr_der_x, // derivative of continuous state
-	vr_u // input
+	vr_time = 0, // time
+	vr_x = 1, // continuous state
+	vr_der_x = 2, // derivative of continuous state
+	vr_u = 3 // input
 } ValueReference;
 
 typedef struct {

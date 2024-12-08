@@ -13,7 +13,6 @@ extern "C" {
 
 // Controller vrefs
 #define Controller_UR_ref 3
-#define Controller_X_ref 2
 #define Controller_R_ref  1
 #define Controller_S_ref  6
 #define Controller_AS_ref 5
@@ -42,7 +41,6 @@ const char* names[N_INSTANCES] = { "plantmodel", "controller", "supervisor" };
 // Constants with value references
 const fmi3ValueReference plantmodel_u_refs[]  = { Plantmodel_U_ref  };
 const fmi3ValueReference plantmodel_y_refs[]  = { Plantmodel_X_ref  };
-const fmi3ValueReference controller_u_refs[]  = { Controller_X_ref };
 const fmi3ValueReference controller_y_refs[]  = { Controller_UR_ref };
 const fmi3ValueReference controller_r_refs[]  = { Controller_R_ref  };
 const fmi3ValueReference controller_s_refs[]  = { Controller_S_ref  };
@@ -132,7 +130,7 @@ typedef struct {
 
 //**************** Output aux functions ******************//
 
-#define OUTPUT_FILE_HEADER "time,x,r,x_r,u_r,a_s\n"
+#define OUTPUT_FILE_HEADER "time,x,r,u_r,a_s\n"
 
 #define CALL(f) do { status = f; if (status > FMIOK) goto TERMINATE; } while (0)
 
@@ -141,15 +139,15 @@ static FMIStatus recordVariables(FILE *outputFile, FMIInstance* controller, FMII
     FMIStatus status = FMIOK;
 
     const fmi3ValueReference plantmodel_vref[] = {Plantmodel_X_ref};
-    fmi3Float64 plantmodel_vals[] = {0};
+    fmi3Float64 plantmodel_vals[] = {0.0};
     CALL(FMI3GetFloat64(plant, plantmodel_vref, 1, plantmodel_vals, 1));
 
-    const fmi3ValueReference controller_vref[] = {Controller_X_ref, Controller_UR_ref , Controller_AS_ref };
-    fmi3Float64 controller_vals[] = {0.0, 0.0 , 0.0 };
-    CALL(FMI3GetFloat64(controller, controller_vref, 3, controller_vals, 3));
+    const fmi3ValueReference controller_vref[] = {Controller_UR_ref , Controller_AS_ref };
+    fmi3Float64 controller_vals[] = {0.0 , 0.0 };
+    CALL(FMI3GetFloat64(controller, controller_vref, 2, controller_vals, 2));
 
-    //                                         time,     x,              r,       x_r,                u_r                a_s
-    fprintf(outputFile, "%g,%g,%d,%g,%g,%g\n", time, plantmodel_vals[0], 0, controller_vals[0], controller_vals[1], controller_vals[2]);
+    //                                         time,     x,           r,        u_r                a_s
+    fprintf(outputFile, "%g,%g,%d,%g,%g\n", time, plantmodel_vals[0], 0, controller_vals[0], controller_vals[1]);
 
 TERMINATE:
     return status;
