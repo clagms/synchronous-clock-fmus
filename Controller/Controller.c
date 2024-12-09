@@ -4,11 +4,10 @@
 
 typedef enum {
 	vr_r = 1,   // Clock
-	vr_xr,      // Sample
-	vr_ur,      // Discrete state/output
-	vr_pre_ur,  // Previous ur
-	vr_as,      // Local var
-	vr_s        // Clock from supervisor
+	vr_ur = 3,      // Discrete state/output
+	vr_pre_ur = 4,  // Previous ur
+	vr_as = 5,      // Local var
+	vr_s = 6        // Clock from supervisor
 } ValueReference;
 
 typedef enum {
@@ -20,7 +19,6 @@ typedef enum {
 
 typedef struct {
 	bool r;         // Clock
-	double xr;      // Sample
 	double ur;      // Discrete state/output
 	double pre_ur;  // Previous ur
 	double as;      // Local var
@@ -96,7 +94,6 @@ fmi3Status fmi3Reset(fmi3Instance instance) {
 	ControllerInstance* comp = (ControllerInstance*)instance;
 
 	comp->data.r = false;       // Clock
-	comp->data.xr = 0.0;                    // Sample
 	comp->data.ur = 0.0;                    // Discrete state/output
 	comp->data.pre_ur = 0.0;                // Previous ur
 	comp->data.as = 1.0;                    // In var from Supervisor
@@ -148,6 +145,7 @@ fmi3Status fmi3GetIntervalDecimal(fmi3Instance instance,
 		switch (vr) {
 			case vr_r:
 				intervals[i] = 0.1;
+				qualifiers[i] = fmi3IntervalUnchanged;
 				s = fmi3OK;
 				break;
 			default:
@@ -185,6 +183,7 @@ fmi3Status fmi3GetIntervalFraction(fmi3Instance instance,
 			case vr_r:
 				counters[i] = 1;
 				resolutions[i] = 10;
+				qualifiers[i] = fmi3IntervalUnchanged;
 				s = fmi3OK;
 				break;
 			default:
@@ -363,10 +362,6 @@ fmi3Status fmi3GetFloat64(fmi3Instance instance,
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_xr:
-			values[i] = comp->data.xr;
-			s = fmi3OK;
-			break;
 		case vr_ur:
 			if (comp->data.r == true) {
 				values[i] = comp->data.ur + comp->data.as;
@@ -428,10 +423,6 @@ fmi3Status fmi3SetFloat64(fmi3Instance instance,
 		fmi3Status s;
 		ValueReference vr = valueReferences[i];
 		switch (vr) {
-		case vr_xr:
-			comp->data.xr = values[i];
-			s = fmi3OK;
-			break;
 		case vr_as:
 			comp->data.as = values[i];
 			s = fmi3OK;

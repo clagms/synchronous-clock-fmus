@@ -12,9 +12,9 @@ typedef enum {
 
 typedef enum {
 	vr_s = 1,       // Clock s
-	vr_x,           // Sample from Plant
-	vr_as,          // Output that is fed to the Controller
-	vr_as_previous  // Previous value for as
+	vr_x = 2,           // Sample from Plant
+	vr_as = 3,          // Output that is fed to the Controller
+	vr_as_previous = 4  // Previous value for as
 } ValueReference;
 
 typedef struct {

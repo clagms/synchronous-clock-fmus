@@ -23,6 +23,9 @@ The output should look like:
 
 The reference result CSV is in [synchronous_control_me_out_ref.csv](synchronous_control_me_out_ref.csv)
 
+The following reference logs are provided:
+- Model exchange: [reference_me](./reference_me.log)
+- Co-simulation: [reference_cs](./reference_cs.log)
 
 ## Building the FMUs and Running Test Script
 
@@ -37,7 +40,3 @@ cmake --build build
 The FMUs will be created in `build/fmus`.
 
 The test scripts are compiled into binaries `synchronous_control_me` and `synchronous_control_cs`, running Model Exchange and Co-simulation, respectively, and are available somewhere under the `build` folder.
-
-The following reference logs are provided:
-- Model exchange: [reference_me](./reference_me.log)
-- Co-simulation: [reference_cs](./reference_cs.log)
